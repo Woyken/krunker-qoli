@@ -20,13 +20,6 @@ const localDocumentRemoveEventListener = document.removeEventListener.bind(docum
 const localMutationObserver = MutationObserver;
 const localArrayFrom = Array.from.bind(Array);
 const localConsoleLog = console.log.bind(console);
-const originalWeakMapSet = WeakMap.prototype.set;
-WeakMap.prototype.set = function ( object ) {
-	if ( object.type === 'Scene' && object.name === 'Main' ) {
-		localConsoleLog("THREE JS scene log", object)
-	}
-	return originalWeakMapSet.apply( this, arguments );
-}
 
 function log(...args) {
   if (enableDebugLogs) localConsoleLog(...args);
