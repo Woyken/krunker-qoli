@@ -1,4 +1,5 @@
 # krunker-qoli
+
 Some Krunker.io game quality of life improvements
 
 ## Getting started
@@ -9,5 +10,6 @@ Some Krunker.io game quality of life improvements
 4. Enjoy.
 
 ## Features
+
 * Automatic popup ads removal
 * Automatic respawn after death / press any button to respawn

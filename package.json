@@ -1,0 +1,32 @@
+{
+  "name": "krunker-qoli",
+  "displayName": "Krunker Quoli",
+  "version": "0.3.0",
+  "description": "",
+  "author": "Woyken",
+  "scripts": {
+    "start": "vite",
+    "dev": "vite",
+    "build": "npm run build:userscript && npm run build:page",
+    "build:page": "vite build",
+    "build:userscript": "cross-env BUILD_TYPE=script vite build",
+    "serve": "vite preview"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^18.0.0",
+    "cross-env": "^7.0.3",
+    "typescript": "^4.6.4",
+    "url": "^0.11.0",
+    "vite": "^2.9.9",
+    "vite-plugin-banner": "^0.3.0",
+    "vite-plugin-checker": "^0.4.6",
+    "vite-plugin-solid": "^2.2.6"
+  },
+  "dependencies": {
+    "@suid/material": "^0.4.2",
+    "comlink": "^4.3.1",
+    "solid-app-router": "^0.4.1",
+    "solid-js": "^1.4.2"
+  }
+}
