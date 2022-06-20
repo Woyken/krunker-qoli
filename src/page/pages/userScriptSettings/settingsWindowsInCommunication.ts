@@ -29,6 +29,11 @@ const exposedSettings = {
     callback: (settings: UserScriptSettings) => void
   ) => {
     currentCallback = callback;
+    // callback just registered, send them an update as soon as possible
+    currentCallback({
+      enabledFastRespawn: enabledFastRespawn(),
+      enabledAdPopupRemoval: enabledAdPopupRemoval(),
+    });
   },
   ping: 0,
 };
