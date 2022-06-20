@@ -34,6 +34,7 @@ if (isScriptBuild) vitePlugins.push(banner(loaderModuleBanner));
 else vitePlugins.push(solidPlugin());
 
 export default defineConfig({
+  base: '/krunker-qoli/',
   plugins: vitePlugins,
   build: {
     emptyOutDir: isScriptBuild,
