@@ -15,8 +15,8 @@ const logger = createScopedLogger("[Settings window communication]");
 
 let settingsWindow: Window | null = null;
 
-const settingsUrl = new URL("http://localhost:3000/#userScriptSettings");
-// const settingsUrl = new URL("https://woyken.github.io/krunker-qoli/#userScriptSettings");
+// const settingsUrl = new URL("http://localhost:3000/#userScriptSettings");
+const settingsUrl = new URL("https://woyken.github.io/krunker-qoli/#userScriptSettings");
 
 const endpointMessageListeners: {
   type: string;
