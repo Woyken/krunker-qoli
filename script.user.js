@@ -1,131 +1,15 @@
+
 // ==UserScript==
-// @name        Krunker.io Quality of life improvements
-// @namespace   Violentmonkey Scripts
-// @match       https://krunker.io/
-// @grant       none
-// @version     0.2
-// @author      Woyken
-// @description Krunker.io quality of life improvements such as removing ad popups, faster respawn (after death, click any button to respawn)
-// @run-at document-start
+// @name         Krunker Quoli
+// @namespace    https://github.com/Woyken/krunker-qoli
+// @version      0.3.0
+// @description  
+// @author       Woyken
+// @match        https://krunker.io/*
+// @grant        none
+// @run-at       document-start
 // @downloadURL  https://woyken.github.io/krunker-qoli/script.user.js
 // ==/UserScript==
+/**/
 
-const enableDebugLogs = false;
-
-const localGetElementById = document.getElementById.bind(document);
-const localDocumentGetElementsByTagName = document.getElementsByTagName.bind(document);
-const localDocumentCreateEvent = document.createEvent.bind(document);
-const localDocumentAddEventListener = document.addEventListener.bind(document);
-const localDocumentRemoveEventListener = document.removeEventListener.bind(document);
-const localMutationObserver = MutationObserver;
-const localArrayFrom = Array.from.bind(Array);
-const localConsoleLog = console.log.bind(console);
-
-function log(...args) {
-  if (enableDebugLogs) localConsoleLog(...args);
-}
-
-let isUserInGame = false;
-
-function setCurrentlyInGame(isInGame) {
-  if (isUserInGame === isInGame) return;
-  isUserInGame = isInGame;
-  // weapDisplay.style is block when player is alive and if game over screen is on
-  // killCardHolder.style when kill cam is active?
-  log("isUserInGame", isUserInGame);
-  handleFastRespawn();
-}
-
-let isUserInDeathWindow = false;
-
-function setIsDeathWindow(isDeathWindow) {
-  if (isUserInDeathWindow === isDeathWindow) return;
-  isUserInDeathWindow = isDeathWindow;
-  log("isUserInDeathWindow", isUserInDeathWindow);
-  handleFastRespawn();
-}
-
-function setIsAdPopupActive(isAdPopupActive) {
-  if (isAdPopupActive) {
-    log("popup active, killing it");
-    localGetElementById("popupBack").click();
-  }
-}
-
-
-function handleFastRespawn() {
-  if (isUserInDeathWindow && !isUserInGame) {
-    // after clicking on canvas it makes a request to capture mouse cursor
-    // this requires genuine user action
-    function tryToActivateGame() {
-      const node = localArrayFrom(localDocumentGetElementsByTagName("canvas")).pop();
-      var mouseDownEvent = localDocumentCreateEvent('MouseEvents');
-      mouseDownEvent.initEvent ('mousedown', true, true);
-      node.dispatchEvent(mouseDownEvent);
-      var mouseUpEvent = localDocumentCreateEvent('MouseEvents');
-      mouseUpEvent.initEvent ('mouseup', true, true);
-      node.dispatchEvent(mouseUpEvent);
-    }
-    
-    // try to make this work instantly in case user is already holding a button or something
-    tryToActivateGame();
-    
-    // register for any keyboard event, and activate game
-    localDocumentAddEventListener(
-      'keydown', 
-      function keyEventListener(keyEvent) {
-        localDocumentRemoveEventListener('keydown', keyEventListener);
-        log("key event received, activating game", keyEvent);
-        tryToActivateGame();
-      });
-  }
-}
-
-function createMutationObserverForStyles(styleChangedCallback) {
-  return new localMutationObserver((mutationList, observer) => {
-    for(const mutation of mutationList) {
-      if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
-        styleChangedCallback(mutation.target.style);
-      }
-    }
-  });
-}
-
-function createMutationObserverForStylesIfDisplayBlock(callback) {
-  return createMutationObserverForStyles((style) => {
-    const isDisplayBlock = style.display === 'block';
-    callback(isDisplayBlock);
-  });
-}
-
-log("Creating mutation observers");
-const ingameuiobserver = createMutationObserverForStylesIfDisplayBlock(setCurrentlyInGame);
-const killCardHolderObserver = createMutationObserverForStylesIfDisplayBlock(setIsDeathWindow);
-const adPopupHolderObserver = createMutationObserverForStylesIfDisplayBlock(setIsAdPopupActive);
-
-function initObservers() {
-  log("Initializing mutation observers");
-  const styleObserveConfig = { attributes: true, attributeFilter: ["style"] };
-  ingameuiobserver.observe(localGetElementById("inGameUI"), styleObserveConfig);
-  killCardHolderObserver.observe(localGetElementById("killCardHolder"), styleObserveConfig);
-  adPopupHolderObserver.observe(localGetElementById("popupHolder"), styleObserveConfig);
-}
-
-function init() {
-  initObservers();
-}
-
-if (document.readyState !== 'complete') {
-  log("document readyState", document.readyState, "adding listener, waiting for reasyState complete event");
-  localDocumentAddEventListener('readystatechange', function readyStateChange() {
-    if (document.readyState === 'complete') {
-      localDocumentRemoveEventListener('readystatechange', readyStateChange);
-      log("document readyState complete event received, initializing script...");
-      init();
-    }
-  });
-} else {
-  log("document readyState = complete, WARNING! It might not work... Script likely needs to be run earlier than this. Initializing anyway...");
-  init();
-}
-
+const Le=(e,t)=>e===t,K={equals:Le};let ee=ne;const C={},S=1,O=2,ke={owned:null,cleanups:null,context:null,owner:null};var g=null;let T=null,u=null,P=null,f=null,p=null,V=0;function w(e,t){t=t?Object.assign({},K,t):K;const s={value:e,observers:null,observerSlots:null,pending:C,comparator:t.equals||void 0},n=r=>(typeof r=="function"&&(r=r(s.pending!==C?s.pending:s.value)),j(s,r));return[Ie.bind(s),n]}function E(e,t,s){ee=xe;const n=Te(e,t,!1,S),r=Y&&ie(g,Y.id);r&&(n.suspense=r),n.user=!0,p?p.push(n):_(n)}function Pe(e){if(P)return e();let t;const s=P=[];try{t=e()}finally{P=null}return te(()=>{for(let n=0;n<s.length;n+=1){const r=s[n];if(r.pending!==C){const o=r.pending;r.pending=C,j(r,o)}}},!1),t}function Ae(e){let t,s=u;return u=null,t=e(),u=s,t}let Y;function Ie(){const e=T;if(this.sources&&(this.state||e)){const t=f;f=null,this.state===S||e?_(this):U(this),f=t}if(u){const t=this.observers?this.observers.length:0;u.sources?(u.sources.push(this),u.sourceSlots.push(t)):(u.sources=[this],u.sourceSlots=[t]),this.observers?(this.observers.push(u),this.observerSlots.push(u.sources.length-1)):(this.observers=[u],this.observerSlots=[u.sources.length-1])}return this.value}function j(e,t,s){if(P)return e.pending===C&&P.push(e),e.pending=t,t;if(e.comparator&&e.comparator(e.value,t))return t;let n=!1;return e.value=t,e.observers&&e.observers.length&&te(()=>{for(let r=0;r<e.observers.length;r+=1){const o=e.observers[r];n&&T.disposed.has(o),(n&&!o.tState||!n&&!o.state)&&(o.pure?f.push(o):p.push(o),o.observers&&se(o)),n||(o.state=S)}if(f.length>1e6)throw f=[],new Error},!1),t}function _(e){if(!e.fn)return;re(e);const t=g,s=u,n=V;u=g=e,Ce(e,e.value,n),u=s,g=t}function Ce(e,t,s){let n;try{n=e.fn(t)}catch(r){oe(r)}(!e.updatedAt||e.updatedAt<=s)&&(e.observers&&e.observers.length?j(e,n):e.value=n,e.updatedAt=s)}function Te(e,t,s,n=S,r){const o={fn:e,state:n,updatedAt:null,owned:null,sources:null,sourceSlots:null,cleanups:null,value:t,owner:g,context:null,pure:s};return g===null||g!==ke&&(g.owned?g.owned.push(o):g.owned=[o]),o}function A(e){const t=T;if(e.state===0||t)return;if(e.state===O||t)return U(e);if(e.suspense&&Ae(e.suspense.inFallback))return e.suspense.effects.push(e);const s=[e];for(;(e=e.owner)&&(!e.updatedAt||e.updatedAt<V);)(e.state||t)&&s.push(e);for(let n=s.length-1;n>=0;n--)if(e=s[n],e.state===S||t)_(e);else if(e.state===O||t){const r=f;f=null,U(e,s[0]),f=r}}function te(e,t){if(f)return e();let s=!1;t||(f=[]),p?s=!0:p=[],V++;try{const n=e();return Re(s),n}catch(n){oe(n)}finally{f=null,s||(p=null)}}function Re(e){f&&(ne(f),f=null),!e&&(p.length?Pe(()=>{ee(p),p=null}):p=null)}function ne(e){for(let t=0;t<e.length;t++)A(e[t])}function xe(e){let t,s=0;for(t=0;t<e.length;t++){const r=e[t];r.user?e[s++]=r:A(r)}const n=e.length;for(t=0;t<s;t++)A(e[t]);for(t=n;t<e.length;t++)A(e[t])}function U(e,t){const s=T;e.state=0;for(let n=0;n<e.sources.length;n+=1){const r=e.sources[n];r.sources&&(r.state===S||s?r!==t&&A(r):(r.state===O||s)&&U(r,t))}}function se(e){const t=T;for(let s=0;s<e.observers.length;s+=1){const n=e.observers[s];(!n.state||t)&&(n.state=O,n.pure?f.push(n):p.push(n),n.observers&&se(n))}}function re(e){let t;if(e.sources)for(;e.sources.length;){const s=e.sources.pop(),n=e.sourceSlots.pop(),r=s.observers;if(r&&r.length){const o=r.pop(),i=s.observerSlots.pop();n<r.length&&(o.sourceSlots[i]=n,r[n]=o,s.observerSlots[n]=i)}}if(e.owned){for(t=0;t<e.owned.length;t++)re(e.owned[t]);e.owned=null}if(e.cleanups){for(t=0;t<e.cleanups.length;t++)e.cleanups[t]();e.cleanups=null}e.state=0,e.context=null}function oe(e){throw e}function ie(e,t){return e?e.context&&e.context[t]!==void 0?e.context[t]:ie(e.owner,t):void 0}const Ne=console.log.bind(console);class z{constructor(...t){this.argsScope=t}createScopedLogger(...t){return new z(...this.argsScope,...t)}log(...t){Ne(...this.argsScope,...t)}}function M(...e){return new z("[Krunker Qoli]",...e)}const Oe=M("[documentState]"),Ue=document.addEventListener.bind(document),De=document.removeEventListener.bind(document),[ae,X]=w(!1);document.readyState!=="complete"?Ue("readystatechange",function e(){document.readyState==="complete"&&(De("readystatechange",e),Oe.log("document readyState complete event received, setting state true"),X(!0))}):X(!0);const[Me,We]=w(!1),[Fe,Be]=w(!1),m={getElementById:document.getElementById.bind(document),getElementsByClassName:document.getElementsByClassName.bind(document),getElementsByTagName:document.getElementsByTagName.bind(document),addEventListener:document.addEventListener.bind(document),removeEventListener:document.removeEventListener.bind(document),createEvent:document.createEvent.bind(document)},He=MutationObserver;function Ge(e){return new He((t,s)=>{for(const n of t)n.type==="attributes"&&n.attributeName==="style"&&e(n.target.style)})}function Q(e){return Ge(t=>{const s=t.display==="block";e(s)})}const W={attributes:!0,attributeFilter:["style"]},F=M("[adPopupDismisser]"),[J,le]=w(!1);E(()=>{!Me()||(F.log("isAdPopupActive effect",J()),J()&&m.getElementById("popupBack")?.click())});const Ve=Q(le);function je(){F.log("initAdPopupDismisser"),E(()=>{if(ae())return;F.log("document readyState complete, adding observer");const e=m.getElementById("popupHolder");e&&(le(e.style.display==="block"),Ve.observe(e,W))})}const _e={arrayFrom:Array.from.bind(Array)},Z=MouseEvent,v=M("[fastRespawn]"),[ce,ue]=w(!1),ze=Q(ue);E(()=>{v.log("isUserInDeathWindow",ce())});const[fe,de]=w(!1),Qe=Q(de);E(()=>{v.log("isUserInGame",fe())});const[pe,$e]=w(!1);E(()=>{v.log("isPointerLocked",pe())});function Ke(){v.log("trying to activate game");const e=_e.arrayFrom(m.getElementsByTagName("canvas")).pop();e?.dispatchEvent(new Z("mousedown",{bubbles:!0,cancelable:!0})),e?.dispatchEvent(new Z("mouseup",{bubbles:!0,cancelable:!0}))}E(()=>{!Fe()||pe()||fe()||!ce()||Ke()});function Ye(){v.log("initFastRespawn"),E(()=>{if(!ae())return;v.log("document readyState complete, adding observer");const e=m.getElementById("inGameUI");e&&(de(e.style.display==="block"),Qe.observe(e,W));const t=m.getElementById("killCardHolder");t&&(ue(t.style.display==="block"),ze.observe(t,W)),m.addEventListener("pointerlockchange",()=>{$e(!!document.pointerLockElement)})})}const ge=Symbol("Comlink.proxy"),Xe=Symbol("Comlink.endpoint"),Je=Symbol("Comlink.releaseProxy"),B=Symbol("Comlink.thrown"),me=e=>typeof e=="object"&&e!==null||typeof e=="function",Ze={canHandle:e=>me(e)&&e[ge],serialize(e){const{port1:t,port2:s}=new MessageChannel;return be(e,t),[s,[s]]},deserialize(e){return e.start(),Ee(e)}},qe={canHandle:e=>me(e)&&B in e,serialize({value:e}){let t;return e instanceof Error?t={isError:!0,value:{message:e.message,name:e.name,stack:e.stack}}:t={isError:!1,value:e},[t,[]]},deserialize(e){throw e.isError?Object.assign(new Error(e.value.message),e.value):e.value}},he=new Map([["proxy",Ze],["throw",qe]]);function be(e,t=self){t.addEventListener("message",function s(n){if(!n||!n.data)return;const{id:r,type:o,path:i}=Object.assign({path:[]},n.data),l=(n.data.argumentList||[]).map(b);let a;try{const c=i.slice(0,-1).reduce((d,L)=>d[L],e),h=i.reduce((d,L)=>d[L],e);switch(o){case"GET":a=h;break;case"SET":c[i.slice(-1)[0]]=b(n.data.value),a=!0;break;case"APPLY":a=h.apply(c,l);break;case"CONSTRUCT":{const d=new h(...l);a=ve(d)}break;case"ENDPOINT":{const{port1:d,port2:L}=new MessageChannel;be(e,L),a=nt(d,[d])}break;case"RELEASE":a=void 0;break;default:return}}catch(c){a={value:c,[B]:0}}Promise.resolve(a).catch(c=>({value:c,[B]:0})).then(c=>{const[h,d]=$(c);t.postMessage(Object.assign(Object.assign({},h),{id:r}),d),o==="RELEASE"&&(t.removeEventListener("message",s),we(t))})}),t.start&&t.start()}function et(e){return e.constructor.name==="MessagePort"}function we(e){et(e)&&e.close()}function Ee(e,t){return H(e,[],t)}function R(e){if(e)throw new Error("Proxy has been released and is not useable")}function H(e,t=[],s=function(){}){let n=!1;const r=new Proxy(s,{get(o,i){if(R(n),i===Je)return()=>y(e,{type:"RELEASE",path:t.map(l=>l.toString())}).then(()=>{we(e),n=!0});if(i==="then"){if(t.length===0)return{then:()=>r};const l=y(e,{type:"GET",path:t.map(a=>a.toString())}).then(b);return l.then.bind(l)}return H(e,[...t,i])},set(o,i,l){R(n);const[a,c]=$(l);return y(e,{type:"SET",path:[...t,i].map(h=>h.toString()),value:a},c).then(b)},apply(o,i,l){R(n);const a=t[t.length-1];if(a===Xe)return y(e,{type:"ENDPOINT"}).then(b);if(a==="bind")return H(e,t.slice(0,-1));const[c,h]=q(l);return y(e,{type:"APPLY",path:t.map(d=>d.toString()),argumentList:c},h).then(b)},construct(o,i){R(n);const[l,a]=q(i);return y(e,{type:"CONSTRUCT",path:t.map(c=>c.toString()),argumentList:l},a).then(b)}});return r}function tt(e){return Array.prototype.concat.apply([],e)}function q(e){const t=e.map($);return[t.map(s=>s[0]),tt(t.map(s=>s[1]))]}const ye=new WeakMap;function nt(e,t){return ye.set(e,t),e}function ve(e){return Object.assign(e,{[ge]:!0})}function st(e,t=self,s="*"){return{postMessage:(n,r)=>e.postMessage(n,s,r),addEventListener:t.addEventListener.bind(t),removeEventListener:t.removeEventListener.bind(t)}}function $(e){for(const[t,s]of he)if(s.canHandle(e)){const[n,r]=s.serialize(e);return[{type:"HANDLER",name:t,value:n},r]}return[{type:"RAW",value:e},ye.get(e)||[]]}function b(e){switch(e.type){case"HANDLER":return he.get(e.name).deserialize(e.value);case"RAW":return e.value}}function y(e,t,s){return new Promise(n=>{const r=rt();e.addEventListener("message",function o(i){!i.data||!i.data.id||i.data.id!==r||(e.removeEventListener("message",o),n(i.data))}),e.start&&e.start(),e.postMessage(Object.assign({id:r},t),s)})}function rt(){return new Array(4).fill(0).map(()=>Math.floor(Math.random()*Number.MAX_SAFE_INTEGER).toString(16)).join("-")}const ot="0.3.0",it=ot,at={open:window.open.bind(window)},k=M("[Settings window communication]");let I=null;const Se=new URL("http://localhost:3000/#userScriptSettings"),x=[];window.addEventListener("message",e=>{e.origin===Se.origin&&e.stopImmediatePropagation(),x.filter(t=>t.type==="message").forEach(({listener:t})=>{"handleEvent"in t?t.handleEvent(e):t(e)})});function lt(e){k.log("settingsUpdatedCallback",e),Be(e.enabledFastRespawn),We(e.enabledAdPopupRemoval)}async function ct(){const e=at.open(Se.href,"settingsWindow","width=400,height=400");if(!e)throw alert("Failed to open settings window, allow popups for Krunker Qoli to work"),new Error("Failed to open settings window");G(),I=e;const t=st(I,{addEventListener(r,o,i){x.push({type:r,listener:o})},removeEventListener(r,o,i){const l=x.findIndex(({type:a,listener:c})=>a===r&&c===o);l>=0&&x.splice(l,1)}},"*"),s=Ee(t);return await new Promise(r=>{k.log("waiting for settings window");const o=setInterval(()=>{k.log("checking for settings window"),ut(s.ping,200).then(()=>{clearInterval(o),r()})},200)}).then(()=>{s.onUnloadPromise.then(()=>{k.log("settings window unloaded"),G()})}),k.log("settings window available"),s.registerCallback(it,ve(lt)),s}function ut(e,t){return new Promise((s,n)=>{setTimeout(()=>{n(new Error("Promise timed out"))},t),e.then(s,n)})}let N;async function ft(){return N||(N=ct()),N}function G(){N=void 0,I&&(I.close(),I=null)}window.addEventListener("beforeunload",e=>{G()});je();Ye();function D(e){m.removeEventListener("click",D),m.removeEventListener("keydown",D),ft()}m.addEventListener("click",D);m.addEventListener("keydown",D);
