@@ -5,6 +5,7 @@ import {
   enabledAdPopupRemoval,
 } from "./state/userScriptSettings";
 
+// TODO wrap all this login into function that is called in settings page
 const onUnloadPromise = new Promise<void>((resolve) => {
   window.addEventListener("beforeunload", () => {
     resolve();
@@ -16,6 +17,7 @@ export interface UserScriptSettings {
   enabledAdPopupRemoval: boolean;
 }
 
+// TODO const [currentCallback, setCurrentCallback] = createSignal<(settings: UserScriptSettings) => void>();
 let currentCallback: ((settings: UserScriptSettings) => void) | undefined;
 
 const exposedSettings = {
