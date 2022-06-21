@@ -25,7 +25,7 @@ const adPopupHolderObserver =
 export function initAdPopupDismisser() {
   logger.log("initAdPopupDismisser");
   createEffect(() => {
-    if (documentReadyStateIsComplete()) return;
+    if (!documentReadyStateIsComplete()) return;
 
     logger.log("document readyState complete, adding observer");
 
