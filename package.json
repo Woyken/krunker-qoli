@@ -10,6 +10,7 @@
     "build": "npm run build:userscript && npm run build:page",
     "build:page": "vite build",
     "build:userscript": "cross-env BUILD_TYPE=script vite build",
+    "build:verify": "npm run build",
     "serve": "vite preview"
   },
   "license": "MIT",
