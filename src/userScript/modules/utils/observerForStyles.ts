@@ -1,6 +1,8 @@
-const LocalMutationObserver = MutationObserver;
+class LocalMutationObserver extends MutationObserver {
+    observe = MutationObserver.prototype.observe;
+}
 
-export function createMutationObserverForStyles(styleChangedCallback: (style: CSSStyleDeclaration) => void) {
+function createMutationObserverForStyles(styleChangedCallback: (style: CSSStyleDeclaration) => void) {
     return new LocalMutationObserver((mutationList) => {
         mutationList.forEach((mutation) => {
             if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
