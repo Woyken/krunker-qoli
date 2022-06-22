@@ -11,39 +11,13 @@ const LocalKeyboardEvent = KeyboardEvent;
 
 const logger = createScopedLogger('[autoReload]');
 
-const [isReloadMessageVisible, setIsReloadMessageVisible] = createSignal(false);
-const reloadMessageObserver = createMutationObserverForStylesIfDisplayBlock(setIsReloadMessageVisible);
-
-const [wasReloadPressed, setWasReloadPressed] = createSignal(false);
-
-createEffect(() => {
-    if (!enabledFastRespawn()) return;
-    if (!isReloadMessageVisible()) return;
-
-    logger.log('pressing down reload button');
-
-    const node = localArray.arrayFrom(localDocument.getElementsByTagName('canvas')).pop();
-    const eventData = { code: 'KeyR', composed: true, key: 'r', keyCode: 82, which: 82, bubbles: true, cancelable: true };
-    node?.dispatchEvent(new LocalKeyboardEvent('keydown', eventData));
-    setWasReloadPressed(true);
-});
-
-const isUserInGame = useIsUserInGame();
-
-createEffect(() => {
-    if (!wasReloadPressed()) return;
-    if (!isUserInGame()) return;
-    if (isReloadMessageVisible()) return;
-
-    logger.log('releasing reload button');
-
-    const node = localArray.arrayFrom(localDocument.getElementsByTagName('canvas')).pop();
-    const eventData = { code: 'KeyR', composed: true, key: 'r', keyCode: 82, which: 82, bubbles: true, cancelable: true };
-    node?.dispatchEvent(new LocalKeyboardEvent('keyup', eventData));
-});
-
-export default function initAutoReload() {
+export default function useAutoReload() {
     logger.log('initAutoReload');
+
+    const isUserInGame = useIsUserInGame();
+
+    const [isReloadMessageVisible, setIsReloadMessageVisible] = createSignal(false);
+    const reloadMessageObserver = createMutationObserverForStylesIfDisplayBlock(setIsReloadMessageVisible);
     createEffect(() => {
         if (!documentReadyStateIsComplete()) return;
 
@@ -54,5 +28,30 @@ export default function initAutoReload() {
             setIsReloadMessageVisible(reloadMsgEl.style.display === 'block');
             reloadMessageObserver.observe(reloadMsgEl, styleObserveConfig);
         }
+    });
+
+    const [wasReloadPressed, setWasReloadPressed] = createSignal(false);
+    createEffect(() => {
+        if (!enabledFastRespawn()) return;
+        if (!isReloadMessageVisible()) return;
+
+        logger.log('pressing down reload button');
+
+        const node = localArray.arrayFrom(localDocument.getElementsByTagName('canvas')).pop();
+        const eventData = { code: 'KeyR', composed: true, key: 'r', keyCode: 82, which: 82, bubbles: true, cancelable: true };
+        node?.dispatchEvent(new LocalKeyboardEvent('keydown', eventData));
+        setWasReloadPressed(true);
+    });
+
+    createEffect(() => {
+        if (!wasReloadPressed()) return;
+        if (!isUserInGame()) return;
+        if (isReloadMessageVisible()) return;
+
+        logger.log('releasing reload button');
+
+        const node = localArray.arrayFrom(localDocument.getElementsByTagName('canvas')).pop();
+        const eventData = { code: 'KeyR', composed: true, key: 'r', keyCode: 82, which: 82, bubbles: true, cancelable: true };
+        node?.dispatchEvent(new LocalKeyboardEvent('keyup', eventData));
     });
 }
