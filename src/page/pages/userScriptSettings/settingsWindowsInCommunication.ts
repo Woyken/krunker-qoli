@@ -1,13 +1,14 @@
 import { expose, windowEndpoint } from 'comlink';
 import { createEffect, createSignal } from 'solid-js';
 import createScopedLogger from '../../../userScript/utils/logger';
-import { enabledFastRespawn, enabledAdPopupRemoval } from './state/userScriptSettings';
+import { enabledFastRespawn, enabledAdPopupRemoval, enabledAutoReload } from './state/userScriptSettings';
 
 const logger = createScopedLogger('[Window settings communicator]');
 
 export interface UserScriptSettings {
     enabledFastRespawn: boolean;
     enabledAdPopupRemoval: boolean;
+    enabledAutoReload: boolean;
 }
 
 export interface ExposedSettings {
@@ -43,16 +44,11 @@ export function useSettingsCommunication() {
             logger.log('TODO doStufff');
             return Math.random();
         },
+        // eslint-disable-next-line solid/reactivity
         registerCallback: (apiVersion: string, callback: (settings: UserScriptSettings) => void) => {
             setCurrentCallback(() => callback);
 
             if (communicatorState() === SettingsCommunicationState.WaitingForCallbackRegistration) setCommunicatorState(SettingsCommunicationState.ReadyToPushEvents);
-
-            // callback just registered, send them an update as soon as possible
-            callback({
-                enabledFastRespawn: enabledFastRespawn(),
-                enabledAdPopupRemoval: enabledAdPopupRemoval(),
-            });
         },
         ping: 0,
     };
@@ -61,6 +57,7 @@ export function useSettingsCommunication() {
         currentCallback()?.({
             enabledFastRespawn: enabledFastRespawn(),
             enabledAdPopupRemoval: enabledAdPopupRemoval(),
+            enabledAutoReload: enabledAutoReload(),
         });
     });
 

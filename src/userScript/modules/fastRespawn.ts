@@ -1,6 +1,7 @@
 import { createEffect, createSignal } from 'solid-js';
 import useDocumentIsFocused from '../../shared/hooks/useDocumentIsFocused';
 import documentReadyStateIsComplete from '../state/documentState';
+import useIsUserInGame from '../state/useIsUserInGame';
 import { enabledFastRespawn } from '../state/userScriptSettingsState';
 import documentEvents from '../utils/documentEvents';
 import localArray from '../utils/localArrayCopy';
@@ -19,12 +20,7 @@ createEffect(() => {
     logger.log('isUserInDeathWindow', isUserInDeathWindow());
 });
 
-const [isUserInGame, setIsUserInGame] = createSignal(false);
-const inGameUiObserver = createMutationObserverForStylesIfDisplayBlock(setIsUserInGame);
-
-createEffect(() => {
-    logger.log('isUserInGame', isUserInGame());
-});
+const isUserInGame = useIsUserInGame();
 
 const [isPointerLocked, setIsPointerLocked] = createSignal(false);
 
@@ -74,12 +70,6 @@ export default function initFastRespawn() {
         if (!documentReadyStateIsComplete()) return;
 
         logger.log('document readyState complete, adding observer');
-
-        const inGameUiEl = localDocument.getElementById('inGameUI');
-        if (inGameUiEl) {
-            setIsUserInGame(inGameUiEl.style.display === 'block');
-            inGameUiObserver.observe(inGameUiEl, styleObserveConfig);
-        }
 
         const killCardHolderEl = localDocument.getElementById('killCardHolder');
         if (killCardHolderEl) {

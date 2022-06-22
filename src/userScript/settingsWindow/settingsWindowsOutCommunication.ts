@@ -1,7 +1,7 @@
 import { proxy, Remote, windowEndpoint, wrap } from 'comlink';
 import { apiVersion } from '../../shared/globals';
 import type { UserScriptSettings, ExposedSettings } from '../../page/pages/userScriptSettings/settingsWindowsInCommunication';
-import { setEnabledAdPopupDismisser, setEnabledFastRespawn } from '../state/userScriptSettingsState';
+import { setEnabledAdPopupDismisser, setEnabledAutoReload, setEnabledFastRespawn } from '../state/userScriptSettingsState';
 import localWindow from '../utils/localWindowCopy';
 import createScopedLogger from '../utils/logger';
 
@@ -9,8 +9,8 @@ const logger = createScopedLogger('[Settings window communication]');
 
 let settingsWindow: Window | null = null;
 
-// const settingsUrl = new URL("http://localhost:3000/#userScriptSettings");
-const settingsUrl = new URL('https://woyken.github.io/krunker-qoli/#userScriptSettings');
+const settingsUrl = new URL('http://localhost:3000/#userScriptSettings');
+// const settingsUrl = new URL('https://woyken.github.io/krunker-qoli/#userScriptSettings');
 
 const endpointMessageListeners: {
     type: string;
@@ -32,6 +32,7 @@ function settingsUpdatedCallback(settings: UserScriptSettings) {
     logger.log('settingsUpdatedCallback', settings);
     setEnabledFastRespawn(settings.enabledFastRespawn);
     setEnabledAdPopupDismisser(settings.enabledAdPopupRemoval);
+    setEnabledAutoReload(settings.enabledAutoReload);
 }
 
 let remoteExposedSettingsPromise: Promise<Remote<ExposedSettings>> | undefined;
