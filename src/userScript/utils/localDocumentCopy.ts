@@ -5,6 +5,7 @@ const localDocument = {
     addEventListener: document.addEventListener.bind(document),
     removeEventListener: document.removeEventListener.bind(document),
     createEvent: document.createEvent.bind(document),
+    hasFocus: document.hasFocus.bind(document),
 };
 
 export default localDocument;

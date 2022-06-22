@@ -1,4 +1,5 @@
 import { createEffect, createSignal } from 'solid-js';
+import useDocumentIsFocused from '../../shared/hooks/useDocumentIsFocused';
 import documentReadyStateIsComplete from '../state/documentState';
 import { enabledFastRespawn } from '../state/userScriptSettingsState';
 import localArray from '../utils/localArrayCopy';
@@ -37,8 +38,11 @@ function tryToActivateGame() {
     node?.dispatchEvent(new LocalMouseEvent('mouseup', { bubbles: true, cancelable: true }));
 }
 
+const documentIsFocused = useDocumentIsFocused();
+
 createEffect(() => {
     if (!enabledFastRespawn()) return;
+    if (!documentIsFocused()) return;
     if (isPointerLocked()) return;
     if (isUserInGame()) return;
     if (!isUserInDeathWindow()) return;
