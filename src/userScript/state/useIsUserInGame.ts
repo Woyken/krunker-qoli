@@ -1,4 +1,4 @@
-import { createEffect, createSignal } from 'solid-js';
+import { createEffect, createSignal, onCleanup } from 'solid-js';
 import { createMutationObserverForStylesIfDisplayBlock, styleObserveConfig } from '../modules/utils/observerForStyles';
 import localDocument from '../utils/localDocumentCopy';
 import documentReadyStateIsComplete from './documentState';
@@ -15,6 +15,7 @@ export default function useIsUserInGame() {
         if (inGameUiEl) {
             setIsUserInGame(inGameUiEl.style.display === 'block');
             inGameUiObserver.observe(inGameUiEl, styleObserveConfig);
+            onCleanup(inGameUiObserver.disconnect);
         }
     });
 

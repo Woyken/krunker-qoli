@@ -1,4 +1,4 @@
-import { createEffect, createSignal } from 'solid-js';
+import { createEffect, createSignal, onCleanup } from 'solid-js';
 import documentReadyStateIsComplete from '../state/documentState';
 import { enabledAdPopupDismisser } from '../state/userScriptSettingsState';
 import localDocument from '../utils/localDocumentCopy';
@@ -21,6 +21,7 @@ export default function useAdPopupDismisser() {
         if (el) {
             setIsAdPopupActive(el.style.display === 'block');
             adPopupHolderObserver.observe(el, styleObserveConfig);
+            onCleanup(adPopupHolderObserver.disconnect);
         }
     });
 
