@@ -2,24 +2,19 @@ import { createEffect, createSignal } from 'solid-js';
 import useDocumentIsFocused from '../../shared/hooks/useDocumentIsFocused';
 import documentReadyStateIsComplete from '../state/documentState';
 import useIsUserInGame from '../state/useIsUserInGame';
+import useIsUserInKillCam from '../state/useIsUserInKillCam';
 import { enabledFastRespawn } from '../state/userScriptSettingsState';
 import documentEvents from '../utils/documentEvents';
 import localArray from '../utils/localArrayCopy';
 import localDocument from '../utils/localDocumentCopy';
 import createScopedLogger from '../utils/logger';
-import { createMutationObserverForStylesIfDisplayBlock, styleObserveConfig } from './utils/observerForStyles';
+import { styleObserveConfig } from './utils/observerForStyles';
 
 const LocalMouseEvent = MouseEvent;
 
 const logger = createScopedLogger('[fastRespawn]');
 
-const [isUserInDeathWindow, setIsUserInDeathWindow] = createSignal(false);
-const killCardHolderObserver = createMutationObserverForStylesIfDisplayBlock(setIsUserInDeathWindow);
-
-createEffect(() => {
-    logger.log('isUserInDeathWindow', isUserInDeathWindow());
-});
-
+const isUserInKillCam = useIsUserInKillCam();
 const isUserInGame = useIsUserInGame();
 
 const [isPointerLocked, setIsPointerLocked] = createSignal(false);
@@ -57,7 +52,7 @@ createEffect(() => {
     if (!wasExitPointerLockCalled()) return;
     if (isPointerLocked()) return;
     if (isUserInGame()) return;
-    if (!isUserInDeathWindow()) return;
+    if (!isUserInKillCam()) return;
 
     // Reset exitPointerLock tracker, it will only get set on next call
     setWasExitPointerLockCalled(false);
@@ -70,12 +65,6 @@ export default function initFastRespawn() {
         if (!documentReadyStateIsComplete()) return;
 
         logger.log('document readyState complete, adding observer');
-
-        const killCardHolderEl = localDocument.getElementById('killCardHolder');
-        if (killCardHolderEl) {
-            setIsUserInDeathWindow(killCardHolderEl.style.display === 'block');
-            killCardHolderObserver.observe(killCardHolderEl, styleObserveConfig);
-        }
 
         localDocument.addEventListener('pointerlockchange', () => {
             setIsPointerLocked(!!document.pointerLockElement);
