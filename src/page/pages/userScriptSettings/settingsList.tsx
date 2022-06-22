@@ -8,7 +8,7 @@ export default function SettingsList() {
         <>
             <Box sx={{ width: '100%' }}>
                 <FormControlLabel
-                    value="Fast respawn"
+                    value="Auto respawn"
                     control={
                         <Checkbox
                             checked={enabledFastRespawn()}
@@ -17,7 +17,7 @@ export default function SettingsList() {
                             }}
                         />
                     }
-                    label="Fast respawn"
+                    label="Auto respawn"
                 />
                 <br />
                 <FormControlLabel
