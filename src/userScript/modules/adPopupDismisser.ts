@@ -7,19 +7,11 @@ import { createMutationObserverForStylesIfDisplayBlock, styleObserveConfig } fro
 
 const logger = createScopedLogger('[adPopupDismisser]');
 
-const [isAdPopupActive, setIsAdPopupActive] = createSignal(false);
-
-createEffect(() => {
-    if (!enabledAdPopupDismisser()) return;
-
-    logger.log('isAdPopupActive effect', isAdPopupActive());
-    if (isAdPopupActive()) localDocument.getElementById('popupBack')?.click();
-});
-
-const adPopupHolderObserver = createMutationObserverForStylesIfDisplayBlock(setIsAdPopupActive);
-
-export default function initAdPopupDismisser() {
+export default function useAdPopupDismisser() {
     logger.log('initAdPopupDismisser');
+
+    const [isAdPopupActive, setIsAdPopupActive] = createSignal(false);
+    const adPopupHolderObserver = createMutationObserverForStylesIfDisplayBlock(setIsAdPopupActive);
     createEffect(() => {
         if (!documentReadyStateIsComplete()) return;
 
@@ -30,5 +22,12 @@ export default function initAdPopupDismisser() {
             setIsAdPopupActive(el.style.display === 'block');
             adPopupHolderObserver.observe(el, styleObserveConfig);
         }
+    });
+
+    createEffect(() => {
+        if (!enabledAdPopupDismisser()) return;
+
+        logger.log('isAdPopupActive effect', isAdPopupActive());
+        if (isAdPopupActive()) localDocument.getElementById('popupBack')?.click();
     });
 }

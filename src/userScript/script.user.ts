@@ -1,9 +1,9 @@
-import initAdPopupDismisser from './modules/adPopupDismisser';
+import useAdPopupDismisser from './modules/adPopupDismisser';
 import useAutoReload from './modules/autoReload';
 import useFastRespawn from './modules/fastRespawn';
 import getRemoteSettings from './settingsWindow/settingsWindowsOutCommunication';
 
-initAdPopupDismisser();
+useAdPopupDismisser();
 useFastRespawn();
 useAutoReload();
 
