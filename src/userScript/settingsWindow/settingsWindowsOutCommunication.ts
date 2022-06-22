@@ -2,7 +2,7 @@ import { proxy, Remote, windowEndpoint, wrap } from "comlink";
 import { apiVersion } from "../../shared/globals";
 import type {
   UserScriptSettings,
-  exposedSettings,
+  ExposedSettings,
 } from "../../page/pages/userScriptSettings/settingsWindowsInCommunication";
 import {
   setEnabledAdPopupDismisser,
@@ -70,7 +70,7 @@ async function openSettingsWindow() {
     "*"
   );
 
-  const remoteExposedSettings = wrap<exposedSettings>(endpoint);
+  const remoteExposedSettings = wrap<ExposedSettings>(endpoint);
 
   const onSettingsWindowAvailablePromise = new Promise<void>((resolve) => {
     logger.log("waiting for settings window");
@@ -113,7 +113,7 @@ function promiseWrapperWithThrowTimeout<T>(
   });
 }
 
-let remoteExposedSettingsPromise: Promise<Remote<exposedSettings>> | undefined;
+let remoteExposedSettingsPromise: Promise<Remote<ExposedSettings>> | undefined;
 
 export async function getRemoteSettings() {
   if (!remoteExposedSettingsPromise)
