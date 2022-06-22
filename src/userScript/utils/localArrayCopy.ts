@@ -1,3 +1,4 @@
-export const localArray = {
-  arrayFrom: Array.from.bind(Array),
+const localArray = {
+    arrayFrom: Array.from.bind(Array),
 };
+export default localArray;

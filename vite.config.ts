@@ -1,11 +1,12 @@
-import { fileURLToPath } from "url";
-import { defineConfig, PluginOption } from "vite";
-import solidPlugin from "vite-plugin-solid";
-import banner from "vite-plugin-banner";
-import { resolve } from "path";
-import Checker from "vite-plugin-checker";
-
-import pkg from "./package.json";
+/* eslint-disable import/no-extraneous-dependencies */
+import { fileURLToPath } from 'url';
+import { defineConfig, PluginOption } from 'vite';
+import solidPlugin from 'vite-plugin-solid';
+import banner from 'vite-plugin-banner';
+import { resolve } from 'path';
+import Checker from 'vite-plugin-checker';
+import eslint from 'vite-plugin-eslint';
+import pkg from './package.json';
 
 const loaderModuleBanner = `
 // ==UserScript==
@@ -22,44 +23,43 @@ const loaderModuleBanner = `
 /**/
 `;
 
-const isScriptBuild = process.env.BUILD_TYPE === "script";
+const isScriptBuild = process.env.BUILD_TYPE === 'script';
 
 const vitePlugins: PluginOption[] = [
-  Checker({
-    typescript: true,
-    overlay: false,
-  }),
+    Checker({
+        typescript: true,
+        overlay: false,
+    }),
+    eslint({ fix: true }),
 ];
 if (isScriptBuild) vitePlugins.push(banner(loaderModuleBanner));
 else vitePlugins.push(solidPlugin());
 
 export default defineConfig({
-  base: '/krunker-qoli/',
-  plugins: vitePlugins,
-  build: {
-    emptyOutDir: isScriptBuild,
-    target: "esnext",
-    polyfillDynamicImport: false,
-    rollupOptions: {
-      output: {
-        entryFileNames: `[name].js`,
-        chunkFileNames: `[name].js`,
-        assetFileNames: `[name].[ext]`,
-      },
-      input: isScriptBuild
-        ? {
-            "userscript-wrapper": fileURLToPath(
-              new URL("./src/userScript/index.html", import.meta.url)
-            ),
-          }
-        : {
-            app: fileURLToPath(new URL("./index.html", import.meta.url)),
-          },
+    base: '/krunker-qoli/',
+    plugins: vitePlugins,
+    build: {
+        emptyOutDir: isScriptBuild,
+        target: 'esnext',
+        polyfillDynamicImport: false,
+        rollupOptions: {
+            output: {
+                entryFileNames: '[name].js',
+                chunkFileNames: '[name].js',
+                assetFileNames: '[name].[ext]',
+            },
+            input: isScriptBuild
+                ? {
+                      'userscript-wrapper': fileURLToPath(new URL('./src/userScript/index.html', import.meta.url)),
+                  }
+                : {
+                      app: fileURLToPath(new URL('./index.html', import.meta.url)),
+                  },
+        },
     },
-  },
-  resolve: {
-    alias: {
-      "@": resolve(__dirname, "./src"),
+    resolve: {
+        alias: {
+            '@': resolve(__dirname, './src'),
+        },
     },
-  },
 });

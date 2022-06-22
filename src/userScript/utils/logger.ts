@@ -1,23 +1,24 @@
+// eslint-disable-next-line no-console
 const localConsoleLog = console.log.bind(console);
 
 const logsEnabled = true;
 
 class ScopedLogger {
-  private argsScope: any[];
+    private argsScope: unknown[];
 
-  constructor(...argsScope: any[]) {
-    this.argsScope = argsScope;
-  }
+    constructor(...argsScope: unknown[]) {
+        this.argsScope = argsScope;
+    }
 
-  createScopedLogger(...argsScope: any[]) {
-    return new ScopedLogger(...this.argsScope, ...argsScope);
-  }
+    createScopedLogger(...argsScope: unknown[]) {
+        return new ScopedLogger(...this.argsScope, ...argsScope);
+    }
 
-  log(...args: any[]) {
-    if (logsEnabled) localConsoleLog(...this.argsScope, ...args);
-  }
+    log(...args: unknown[]) {
+        if (logsEnabled) localConsoleLog(...this.argsScope, ...args);
+    }
 }
 
-export function createScopedLogger(...argsScope: any[]) {
-  return new ScopedLogger("[Krunker Qoli]", ...argsScope);
+export default function createScopedLogger(...argsScope: unknown[]) {
+    return new ScopedLogger('[Krunker Qoli]', ...argsScope);
 }

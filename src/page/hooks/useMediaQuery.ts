@@ -1,6 +1,6 @@
-import { createSignal, onCleanup } from "solid-js";
+import { createSignal, onCleanup } from 'solid-js';
 
-export const useMediaQuery = (query: string) => {
+const useMediaQuery = (query: string) => {
     const matcher = window.matchMedia(query);
     const [matches, setMatches] = createSignal(matcher.matches);
 
@@ -8,5 +8,7 @@ export const useMediaQuery = (query: string) => {
     matcher.addEventListener('change', changeHandler);
     onCleanup(() => matcher.removeEventListener('change', changeHandler));
 
-    return matches
-  }
+    return matches;
+};
+
+export default useMediaQuery;

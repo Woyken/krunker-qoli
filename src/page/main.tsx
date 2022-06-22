@@ -1,9 +1,9 @@
 /* @refresh reload */
-import { render } from "solid-js/web";
-import App from "./app";
+import { render } from 'solid-js/web';
+import App from './app';
 
 function initPageRender() {
-  render(() => <App />, document.getElementById("root") as HTMLElement);
+    render(() => <App />, document.getElementById('root') as HTMLElement);
 }
 
 initPageRender();
