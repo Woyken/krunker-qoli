@@ -14,3 +14,10 @@ createEffect(() => {
 createEffect(() => {
     localStorage.setItem('enabledAdPopupRemoval', `${enabledAdPopupRemoval()}`);
 });
+
+// this will be triggered if anything changes in localStorage from another tab
+window.addEventListener('storage', () => {
+    setEnabledAutoReload((localStorage.getItem('enabledAutoReload') ?? 'true') === 'true');
+    setEnabledFastRespawn((localStorage.getItem('enabledFastRespawn') ?? 'true') === 'true');
+    setEnabledAdPopupRemoval((localStorage.getItem('enabledAdPopupRemoval') ?? 'true') === 'true');
+});
