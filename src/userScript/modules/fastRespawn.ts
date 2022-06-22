@@ -1,6 +1,6 @@
 import { createEffect, createSignal } from 'solid-js';
 import useDocumentIsFocused from '../../shared/hooks/useDocumentIsFocused';
-import documentReadyStateIsComplete from '../state/documentState';
+import useDocumentIsPointerLocked from '../state/useDocumentIsPointerLocked';
 import useIsUserInGame from '../state/useIsUserInGame';
 import useIsUserInKillCam from '../state/useIsUserInKillCam';
 import { enabledFastRespawn } from '../state/userScriptSettingsState';
@@ -8,7 +8,6 @@ import documentEvents from '../utils/documentEvents';
 import localArray from '../utils/localArrayCopy';
 import localDocument from '../utils/localDocumentCopy';
 import createScopedLogger from '../utils/logger';
-import { styleObserveConfig } from './utils/observerForStyles';
 
 const LocalMouseEvent = MouseEvent;
 
@@ -16,12 +15,7 @@ const logger = createScopedLogger('[fastRespawn]');
 
 const isUserInKillCam = useIsUserInKillCam();
 const isUserInGame = useIsUserInGame();
-
-const [isPointerLocked, setIsPointerLocked] = createSignal(false);
-
-createEffect(() => {
-    logger.log('isPointerLocked', isPointerLocked());
-});
+const isPointerLocked = useDocumentIsPointerLocked();
 
 // If user presses ESC, only event on document will be fired 'pointerlockchange'
 // Application can call document.exitPointerLock() to get out of pointer lock mode
@@ -61,13 +55,4 @@ createEffect(() => {
 
 export default function initFastRespawn() {
     logger.log('initFastRespawn');
-    createEffect(() => {
-        if (!documentReadyStateIsComplete()) return;
-
-        logger.log('document readyState complete, adding observer');
-
-        localDocument.addEventListener('pointerlockchange', () => {
-            setIsPointerLocked(!!document.pointerLockElement);
-        });
-    });
 }
