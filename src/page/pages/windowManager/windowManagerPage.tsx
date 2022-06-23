@@ -2,12 +2,9 @@ import Typography from '@suid/material/Typography';
 import { useNavigate, useSearchParams } from 'solid-app-router';
 import { type Accessor, createEffect, createSignal, onCleanup, For } from 'solid-js';
 import localWindow from '../../../userScript/utils/localWindowCopy';
-import createScopedLogger from '../../../userScript/utils/logger';
 import SettingsList from '../userScriptSettings/settingsList';
 import useOnBeforeUnloadCloseWindows from './useOnBeforeUnloadCloseWindows';
 import useRemoveClosedWindows from './useRemoveClosedWindows';
-
-const logger = createScopedLogger('[WindowManagerPage]');
 
 export interface SavedManagedWindow {
     wnd: Window;
@@ -49,7 +46,6 @@ function useBroadcastWindowManager() {
     onCleanup(broadcast.close.bind(broadcast));
 
     // eslint-disable-next-line no-console
-    console.log('currentKrunkerUrl', currentKrunkerUrl);
     if (currentKrunkerUrl) {
         const newWindowMessage: BroadcastWindowManagerMessage = {
             type: 'new window opened',
@@ -64,8 +60,6 @@ function useBroadcastWindowManager() {
     }
 
     function handleMessage(e: MessageEvent<BroadcastWindowManagerMessage>) {
-        // eslint-disable-next-line no-console
-        console.log('broadcast received', e.data);
         switch (e.data.type) {
             case 'new window opened': {
                 // TODO consume target, focus existing window, redirect existing or create new window to e.data.krunkerUrl;
@@ -114,22 +108,18 @@ export default function WindowManagerPage() {
 
     // eslint-disable-next-line solid/reactivity
     manager.onOpenKrunker = (krunkerUrl) => {
-        logger.log('onOpenKrunker', managedWindows());
         const firstWnd = managedWindows()[0];
         if (firstWnd) {
-            logger.log('onOpenKrunker firstWnd', firstWnd);
             firstWnd.wnd.location.href = krunkerUrl;
             firstWnd.wnd.focus();
             return;
         }
-        logger.log('before onOpenKrunker open called');
         const wnd = localWindow.open(krunkerUrl, 'krunker', `width=${window.innerWidth},height=${window.innerHeight}`);
         if (isCleanedUp) {
-            // TODO wow, this is surprising. While window is being opened, broadcast message can be received, and looks like current thread is paused until broadcast message is handled
+            // wow, this is surprising. While window is being opened, broadcast message can be received, and looks like current thread is paused until broadcast message is handled
             wnd?.close();
             return;
         }
-        logger.log('onOpenKrunker opened', wnd);
         if (!wnd) throw alert('Enable popups for this to work!');
         setManagedWindows([...managedWindows(), { wnd, openedUrl: krunkerUrl }]);
     };
