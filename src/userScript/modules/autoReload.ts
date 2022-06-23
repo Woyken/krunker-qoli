@@ -27,7 +27,7 @@ export default function useAutoReload() {
         if (reloadMsgEl) {
             setIsReloadMessageVisible(reloadMsgEl.style.display === 'block');
             reloadMessageObserver.observe(reloadMsgEl, styleObserveConfig);
-            onCleanup(reloadMessageObserver.disconnect);
+            onCleanup(reloadMessageObserver.disconnect.bind(reloadMessageObserver));
         }
     });
 

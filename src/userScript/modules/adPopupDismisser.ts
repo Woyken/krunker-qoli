@@ -21,7 +21,7 @@ export default function useAdPopupDismisser() {
         if (el) {
             setIsAdPopupActive(el.style.display === 'block');
             adPopupHolderObserver.observe(el, styleObserveConfig);
-            onCleanup(adPopupHolderObserver.disconnect);
+            onCleanup(adPopupHolderObserver.disconnect.bind(adPopupHolderObserver));
         }
     });
 

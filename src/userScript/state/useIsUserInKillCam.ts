@@ -15,7 +15,7 @@ export default function useIsUserInKillCam() {
         if (killCardHolderEl) {
             setIsUserInKillCam(killCardHolderEl.style.display === 'block');
             killCardHolderObserver.observe(killCardHolderEl, styleObserveConfig);
-            onCleanup(killCardHolderObserver.disconnect);
+            onCleanup(killCardHolderObserver.disconnect.bind(killCardHolderObserver));
         }
     });
 

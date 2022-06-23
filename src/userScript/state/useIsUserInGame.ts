@@ -15,7 +15,7 @@ export default function useIsUserInGame() {
         if (inGameUiEl) {
             setIsUserInGame(inGameUiEl.style.display === 'block');
             inGameUiObserver.observe(inGameUiEl, styleObserveConfig);
-            onCleanup(inGameUiObserver.disconnect);
+            onCleanup(inGameUiObserver.disconnect.bind(inGameUiObserver));
         }
     });
 

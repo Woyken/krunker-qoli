@@ -7,18 +7,20 @@ import createScopedLogger from '../utils/logger';
 
 const logger = createScopedLogger('[Settings window communication]');
 
+const LocalURL = URL;
+
 let settingsWindow: Window | null = null;
 
-// const settingsUrl = new URL('http://localhost:3000/#userScriptSettings');
-const settingsUrl = new URL('https://woyken.github.io/krunker-qoli/#userScriptSettings');
+// const qoliBaseUrl = new LocalURL('http://localhost:3000');
+const qoliBaseUrl = new LocalURL('https://woyken.github.io/krunker-qoli');
 
 const endpointMessageListeners: {
     type: string;
     listener: EventListenerOrEventListenerObject;
 }[] = [];
 
-window.addEventListener('message', (e) => {
-    if (e.origin === settingsUrl.origin) e.stopImmediatePropagation();
+localWindow.addEventListener('message', (e) => {
+    if (e.origin === qoliBaseUrl.origin) e.stopImmediatePropagation();
     // TODO rewrite with map of arrays by type
     endpointMessageListeners
         .filter((l) => l.type === 'message')
@@ -55,7 +57,7 @@ function promiseWrapperWithThrowTimeout<T>(inputPromise: Promise<T>, timeout: nu
 }
 
 async function openSettingsWindow() {
-    const wnd = localWindow.open(settingsUrl.href, 'settingsWindow', 'width=400,height=400');
+    const wnd = localWindow.open(new LocalURL('#userScriptSettings', qoliBaseUrl).href, 'settingsWindow', 'width=400,height=400');
     if (!wnd) {
         alert('Failed to open settings window, allow popups for Krunker Qoli to work');
         throw new Error('Failed to open settings window');
@@ -82,10 +84,14 @@ async function openSettingsWindow() {
         logger.log('waiting for settings window');
         const intervalId = setInterval(() => {
             logger.log('checking for settings window');
-            promiseWrapperWithThrowTimeout(remoteExposedSettings.ping, 200).then(() => {
-                clearInterval(intervalId);
-                resolve();
-            });
+            promiseWrapperWithThrowTimeout(remoteExposedSettings.ping, 200)
+                .then(() => {
+                    clearInterval(intervalId);
+                    resolve();
+                })
+                .catch(() => {
+                    // TODO
+                });
         }, 200);
     });
 
@@ -108,6 +114,6 @@ export default async function getRemoteSettings() {
     return remoteExposedSettingsPromise;
 }
 
-window.addEventListener('beforeunload', () => {
+localWindow.addEventListener('beforeunload', () => {
     closeSettingsWindow();
 });
