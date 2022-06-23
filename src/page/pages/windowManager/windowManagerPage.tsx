@@ -3,12 +3,17 @@ import { useNavigate, useSearchParams } from 'solid-app-router';
 import { type Accessor, createEffect, createSignal, onCleanup, For } from 'solid-js';
 import localWindow from '../../../userScript/utils/localWindowCopy';
 import SettingsList from '../userScriptSettings/settingsList';
+import { useExposeSettingsCommunication } from '../userScriptSettings/settingsWindowsInCommunication';
 import useOnBeforeUnloadCloseWindows from './useOnBeforeUnloadCloseWindows';
 import useRemoveClosedWindows from './useRemoveClosedWindows';
 
 export interface SavedManagedWindow {
     wnd: Window;
     openedUrl: string;
+}
+
+interface SavedManagedWindowWithCommunication extends SavedManagedWindow {
+    exposedCommunication: ReturnType<typeof useExposeSettingsCommunication>;
 }
 
 type BroadcastWindowManagerMessage =
@@ -28,6 +33,29 @@ const currentWindowId = `${window.location.href}*${Math.random()}`;
 type WindowManagerPageRouteParams = {
     redirectKrunkerUrl?: string;
 };
+
+function useExposeSettingsForSavedManagedWindow(savedManagedWindow: SavedManagedWindow) {
+    const exposedCommunication = useExposeSettingsCommunication(savedManagedWindow.wnd);
+    return exposedCommunication;
+}
+
+function useExposeSettingsForSavedManagedWindowsWithComm(windows: Accessor<SavedManagedWindow[]>) {
+    const [windowsWithComm, setWindowsWithComm] = createSignal<SavedManagedWindowWithCommunication[]>([]);
+    createEffect(() => {
+        const newWindows = windows().filter((w) => !windowsWithComm().find((wc) => wc.wnd === w.wnd));
+        const removedWindows = windowsWithComm().filter((wc) => !windows().find((w) => w.wnd === wc.wnd));
+        removedWindows.forEach((w) => w.exposedCommunication.unsubscribeAll());
+        if (newWindows.length === 0 && removedWindows.length === 0) return;
+        const existingWindows = windowsWithComm().filter((wc) => !windows().find((w) => w.wnd === wc.wnd));
+        const newWindowsWithComm = newWindows.map<SavedManagedWindowWithCommunication>((w) => ({
+            ...w,
+            exposedCommunication: useExposeSettingsForSavedManagedWindow(w),
+        }));
+        setWindowsWithComm([...existingWindows, ...newWindowsWithComm]);
+    });
+
+    return windowsWithComm;
+}
 
 function useBroadcastWindowManager() {
     const [searchParams, setSearchParams] = useSearchParams<WindowManagerPageRouteParams>();
@@ -96,6 +124,7 @@ export default function WindowManagerPage() {
     const [managedWindows, setManagedWindows] = createSignal<SavedManagedWindow[]>([]);
     useRemoveClosedWindows(managedWindows, setManagedWindows);
     useOnBeforeUnloadCloseWindows(managedWindows);
+    const managedWindowsWithComm = useExposeSettingsForSavedManagedWindowsWithComm(managedWindows);
     let isCleanedUp = false;
     onCleanup(() => {
         isCleanedUp = true;
@@ -139,10 +168,10 @@ export default function WindowManagerPage() {
             <Typography variant="body1" component="div" gutterBottom>
                 TODO Display list of connected Krunker windows Provide settings fetching API for all of them
             </Typography>
-            <For each={managedWindows()}>
+            <For each={managedWindowsWithComm()}>
                 {(managedWindow) => (
                     <Typography variant="body2" component="div" onclick={() => managedWindow.wnd.focus()}>
-                        {managedWindow.openedUrl}
+                        {managedWindow.openedUrl} ({managedWindow.exposedCommunication.communicatorState()})
                     </Typography>
                 )}
             </For>

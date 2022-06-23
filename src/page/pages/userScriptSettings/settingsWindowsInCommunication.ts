@@ -1,5 +1,6 @@
-import { expose, windowEndpoint } from 'comlink';
-import { createEffect, createSignal } from 'solid-js';
+import { expose } from 'comlink';
+import { createEffect, createSignal, onCleanup } from 'solid-js';
+import windowEndpointWithUnsubscribe from '../../../shared/utils/windowEndpointWithUnsubscribe';
 import createScopedLogger from '../../../userScript/utils/logger';
 import { enabledFastRespawn, enabledAdPopupRemoval, enabledAutoReload } from './state/userScriptSettings';
 
@@ -14,21 +15,17 @@ export interface UserScriptSettings {
 export interface ExposedSettings {
     onUnloadPromise: Promise<void>;
     doStufff: () => number;
-    registerCallback: (apiVersion: string, callback: (settings: UserScriptSettings) => void) => void;
+    registerSettingsCallback: (apiVersion: string, callback: (settings: UserScriptSettings) => void) => void;
     ping: number;
 }
 
 export enum SettingsCommunicationState {
-    NoOpener,
     WaitingForCallbackRegistration,
     ReadyToPushEvents,
 }
 
-export function useSettingsCommunication() {
-    const [communicatorState, setCommunicatorState] = createSignal(SettingsCommunicationState.NoOpener);
-
-    if (!window.opener) return { communicatorState };
-    setCommunicatorState(SettingsCommunicationState.WaitingForCallbackRegistration);
+export function useExposeSettingsCommunication(exposeToWindow: Window) {
+    const [communicatorState, setCommunicatorState] = createSignal(SettingsCommunicationState.WaitingForCallbackRegistration);
 
     const windowOnUnloadPromise = new Promise<void>((resolve) => {
         window.addEventListener('beforeunload', () => {
@@ -45,7 +42,7 @@ export function useSettingsCommunication() {
             return Math.random();
         },
         // eslint-disable-next-line solid/reactivity
-        registerCallback: (apiVersion: string, callback: (settings: UserScriptSettings) => void) => {
+        registerSettingsCallback: (apiVersion: string, callback: (settings: UserScriptSettings) => void) => {
             setCurrentCallback(() => callback);
 
             if (communicatorState() === SettingsCommunicationState.WaitingForCallbackRegistration) setCommunicatorState(SettingsCommunicationState.ReadyToPushEvents);
@@ -61,7 +58,11 @@ export function useSettingsCommunication() {
         });
     });
 
-    expose(exposedSettings, windowEndpoint(window.opener));
+    const endpoint = windowEndpointWithUnsubscribe(exposeToWindow);
+    onCleanup(endpoint.unsubscribeAll.bind(endpoint));
+    expose(exposedSettings, endpoint);
 
-    return { communicatorState };
+    const unsubscribeAll = endpoint.unsubscribeAll.bind(endpoint);
+
+    return { communicatorState, unsubscribeAll };
 }

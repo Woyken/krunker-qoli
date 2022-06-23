@@ -103,7 +103,7 @@ async function openSettingsWindow() {
     });
     logger.log('settings window available');
 
-    remoteExposedSettings.registerCallback(apiVersion, proxy(settingsUpdatedCallback));
+    remoteExposedSettings.registerSettingsCallback(apiVersion, proxy(settingsUpdatedCallback));
 
     return remoteExposedSettings;
 }
