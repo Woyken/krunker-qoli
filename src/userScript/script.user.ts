@@ -8,4 +8,6 @@ useFastRespawn();
 useAutoReload();
 
 // TODO some kind of init
-getRemoteSettings();
+localWindow.setTimeout(() => {
+    getRemoteSettings();
+}, 100);
