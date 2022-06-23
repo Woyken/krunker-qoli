@@ -1,53 +1,17 @@
 import Typography from '@suid/material/Typography';
 import { useNavigate, useSearchParams } from 'solid-app-router';
-import { type Accessor, createEffect, createSignal, onCleanup, type Setter, For } from 'solid-js';
+import { type Accessor, createEffect, createSignal, onCleanup, For } from 'solid-js';
 import localWindow from '../../../userScript/utils/localWindowCopy';
 import createScopedLogger from '../../../userScript/utils/logger';
 import SettingsList from '../userScriptSettings/settingsList';
+import useOnBeforeUnloadCloseWindows from './useOnBeforeUnloadCloseWindows';
+import useRemoveClosedWindows from './useRemoveClosedWindows';
 
 const logger = createScopedLogger('[WindowManagerPage]');
 
-interface SavedManagedWindow {
+export interface SavedManagedWindow {
     wnd: Window;
     openedUrl: string;
-}
-
-/**
- * will close all windows on window event beforeunload
- * and on cleanup
- */
-function useOnBeforeUnloadCloseWindows(windows: Accessor<SavedManagedWindow[]>) {
-    createEffect(() => {
-        logger.log('useOnBeforeUnloadCloseWindows wnd changed', windows());
-    });
-
-    logger.log('useOnBeforeUnloadCloseWindows');
-    function onWindowBeforeUnload() {
-        logger.log('useOnBeforeUnloadCloseWindows.onWindowBeforeUnload', windows());
-        windows().forEach((w) => {
-            logger.log('useOnBeforeUnloadCloseWindows.onWindowBeforeUnload close', w.openedUrl);
-            w.wnd.close();
-        });
-    }
-    window.addEventListener('beforeunload', onWindowBeforeUnload);
-    onCleanup(() => {
-        logger.log('useOnBeforeUnloadCloseWindows cleanup', windows());
-        window.removeEventListener('beforeunload', onWindowBeforeUnload);
-        onWindowBeforeUnload();
-    });
-}
-
-function useRemoveClosedWindows(windows: Accessor<SavedManagedWindow[]>, setWindows: Setter<SavedManagedWindow[]>) {
-    createEffect(() => {
-        logger.log('useRemoveClosedWindows wnd changed', windows());
-    });
-    const interval = setInterval(() => {
-        const areSomeClosed = windows().some((w) => w.wnd.closed);
-        if (areSomeClosed) {
-            setWindows(windows().filter((w) => !w.wnd.closed));
-        }
-    }, 1000);
-    onCleanup(() => clearInterval(interval));
 }
 
 type BroadcastWindowManagerMessage =
