@@ -1,6 +1,7 @@
+import Button from '@suid/material/Button';
 import Typography from '@suid/material/Typography';
 import { useNavigate, useSearchParams } from 'solid-app-router';
-import { type Accessor, createEffect, createSignal, onCleanup, For } from 'solid-js';
+import { type Accessor, createEffect, createSignal, onCleanup, For, Show } from 'solid-js';
 import localWindow from '../../../userScript/utils/localWindowCopy';
 import createScopedLogger from '../../../userScript/utils/logger';
 import SettingsList from '../userScriptSettings/settingsList';
@@ -167,6 +168,10 @@ export default function WindowManagerPage() {
         manager.onOpenKrunker = undefined;
     });
 
+    function handleOpenKrunker() {
+        manager.onOpenKrunker?.('https://krunker.io/');
+    }
+
     return (
         <>
             <Typography variant="h2" component="div" gutterBottom>
@@ -176,16 +181,19 @@ export default function WindowManagerPage() {
                 Settings
             </Typography>
             <SettingsList />
-            <Typography variant="body1" component="div" gutterBottom>
-                TODO Display list of connected Krunker windows Provide settings fetching API for all of them
+            <Typography variant="h4" component="div" gutterBottom>
+                Running Krunker instances
             </Typography>
             <For each={managedWindowsWithComm()}>
                 {(managedWindow) => (
-                    <Typography variant="body2" component="div" onclick={() => managedWindow.wnd.focus()}>
+                    <Button onclick={() => managedWindow.wnd.focus()}>
                         {managedWindow.openedUrl} ({managedWindow.exposedCommunication.communicatorState()})
-                    </Typography>
+                    </Button>
                 )}
             </For>
+            <Show when={managedWindowsWithComm().length === 0}>
+                <Button onclick={handleOpenKrunker}>Open Krunker</Button>
+            </Show>
         </>
     );
 }
