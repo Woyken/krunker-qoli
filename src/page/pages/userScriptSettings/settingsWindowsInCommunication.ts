@@ -3,7 +3,7 @@ import { createEffect, createSignal } from 'solid-js';
 import windowEndpointWithUnsubscribe from '../../../shared/utils/windowEndpointWithUnsubscribe';
 import localWindow from '../../../userScript/utils/localWindowCopy';
 import createScopedLogger from '../../../userScript/utils/logger';
-import { enabledFastRespawn, enabledAdPopupRemoval, enabledAutoReload } from './state/userScriptSettings';
+import { enabledFastRespawn, enabledAdPopupRemoval, enabledAutoReload, enabledWindowManager } from './state/userScriptSettings';
 
 const logger = createScopedLogger('[Window settings communicator]');
 
@@ -11,6 +11,7 @@ export interface UserScriptSettings {
     enabledFastRespawn: boolean;
     enabledAdPopupRemoval: boolean;
     enabledAutoReload: boolean;
+    enabledWindowManager: boolean;
 }
 
 export interface ExposedSettings {
@@ -67,6 +68,7 @@ export function useExposeSettingsCommunication(exposeToWindow: Window) {
             enabledFastRespawn: enabledFastRespawn(),
             enabledAdPopupRemoval: enabledAdPopupRemoval(),
             enabledAutoReload: enabledAutoReload(),
+            enabledWindowManager: enabledWindowManager(),
         });
     });
 

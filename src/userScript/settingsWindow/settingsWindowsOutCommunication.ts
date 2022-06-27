@@ -2,7 +2,7 @@ import { proxy, wrap } from 'comlink';
 import { createEffect, createSignal, onCleanup } from 'solid-js';
 import { apiVersion } from '../../shared/globals';
 import type { UserScriptSettings, ExposedSettings } from '../../page/pages/userScriptSettings/settingsWindowsInCommunication';
-import { setEnabledAdPopupDismisser, setEnabledAutoReload, setEnabledFastRespawn } from '../state/userScriptSettingsState';
+import { setEnabledAdPopupDismisser, setEnabledAutoReload, setEnabledFastRespawn, setEnabledWindowManager } from '../state/userScriptSettingsState';
 import localWindow from '../utils/localWindowCopy';
 import createScopedLogger from '../utils/logger';
 import windowEndpointWithUnsubscribe from '../../shared/utils/windowEndpointWithUnsubscribe';
@@ -34,6 +34,7 @@ function settingsUpdatedCallback(settings: UserScriptSettings) {
     setEnabledFastRespawn(settings.enabledFastRespawn);
     setEnabledAdPopupDismisser(settings.enabledAdPopupRemoval);
     setEnabledAutoReload(settings.enabledAutoReload);
+    setEnabledWindowManager(settings.enabledWindowManager);
 }
 
 function promiseWrapperWithThrowTimeout<T>(inputPromise: Promise<T>, timeout: number): Promise<T> {
@@ -124,13 +125,16 @@ async function useSettingsConnection(wnd: Window) {
                 setState('disposed');
             });
             setState('available');
+            logger.log('settings window available');
         })
         .catch((e) => {
             logger.log('settings window connection error', e);
             setState('error');
         });
 
-    remoteExposedSettings.registerSettingsCallback(apiVersion, proxy(settingsUpdatedCallback));
+    createEffect(() => {
+        if (state() === 'available') remoteExposedSettings.registerSettingsCallback(apiVersion, proxy(settingsUpdatedCallback));
+    });
 
     return {
         state,
