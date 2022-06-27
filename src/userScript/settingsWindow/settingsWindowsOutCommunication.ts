@@ -1,8 +1,16 @@
 import { proxy, wrap } from 'comlink';
 import { createEffect, createSignal, onCleanup } from 'solid-js';
 import { apiVersion } from '../../shared/globals';
-import type { UserScriptSettings, ExposedSettings } from '../../page/pages/userScriptSettings/settingsWindowsInCommunication';
-import { setEnabledAdPopupDismisser, setEnabledAutoReload, setEnabledFastRespawn, setEnabledWindowManager } from '../state/userScriptSettingsState';
+import type {
+    UserScriptSettings,
+    ExposedSettings,
+} from '../../page/pages/userScriptSettings/settingsWindowsInCommunication';
+import {
+    setEnabledAdPopupDismisser,
+    setEnabledAutoReload,
+    setEnabledFastRespawn,
+    setEnabledWindowManager,
+} from '../state/userScriptSettingsState';
 import localWindow from '../utils/localWindowCopy';
 import createScopedLogger from '../utils/logger';
 import windowEndpointWithUnsubscribe from '../../shared/utils/windowEndpointWithUnsubscribe';
@@ -57,7 +65,11 @@ function useSettingsWindow() {
             // Let's not open popup too soon, firefox will stop loading current page if we do
             if (!isDocumentAtLeastInteractive()) return;
             logger.log('opening new settings window');
-            const openedWnd = localWindow.open(new LocalURL('#userScriptSettings', qoliBaseUrl).href, 'settingsWindow', 'width=400,height=450');
+            const openedWnd = localWindow.open(
+                new LocalURL('#userScriptSettings', qoliBaseUrl).href,
+                'settingsWindow',
+                'width=400,height=450'
+            );
             hasOpenedSettings = true;
             if (!openedWnd) {
                 alert('Failed to open settings window, allow popups for Krunker Qoli to work');
@@ -91,7 +103,8 @@ async function useSettingsConnection(wnd: Window) {
                 else endpointMessageListeners[type] = [listener];
             },
             removeEventListener(type, listener) {
-                if (endpointMessageListeners[type]) endpointMessageListeners[type] = endpointMessageListeners[type].filter((l) => l !== listener);
+                if (endpointMessageListeners[type])
+                    endpointMessageListeners[type] = endpointMessageListeners[type].filter((l) => l !== listener);
             },
         },
         '*'

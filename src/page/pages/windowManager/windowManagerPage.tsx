@@ -49,13 +49,23 @@ function useExposeSettingsForSavedManagedWindowsWithComm(windows: Accessor<Saved
     createEffect(() => {
         logger.log('useExposeSettingsForSavedManagedWindowsWithComm effect', windows());
 
-        const newWindows = windows().filter((w) => !currentSavedManagedWindowsWithCommunication.find((wc) => wc.wnd === w.wnd));
-        const removedWindows = currentSavedManagedWindowsWithCommunication.filter((wc) => !windows().find((w) => w.wnd === wc.wnd));
+        const newWindows = windows().filter(
+            (w) => !currentSavedManagedWindowsWithCommunication.find((wc) => wc.wnd === w.wnd)
+        );
+        const removedWindows = currentSavedManagedWindowsWithCommunication.filter(
+            (wc) => !windows().find((w) => w.wnd === wc.wnd)
+        );
         removedWindows.forEach((w) => w.exposedCommunication.unsubscribeAll());
         if (newWindows.length === 0 && removedWindows.length === 0) return;
-        const existingWindows = currentSavedManagedWindowsWithCommunication.filter((wc) => !windows().find((w) => w.wnd === wc.wnd));
+        const existingWindows = currentSavedManagedWindowsWithCommunication.filter(
+            (wc) => !windows().find((w) => w.wnd === wc.wnd)
+        );
         logger.log('newWindows', newWindows, 'removedWindows', removedWindows, 'existingWindows', existingWindows);
-        if (existingWindows.length < currentSavedManagedWindowsWithCommunication.length || newWindows.length > 0 || removedWindows.length > 0) {
+        if (
+            existingWindows.length < currentSavedManagedWindowsWithCommunication.length ||
+            newWindows.length > 0 ||
+            removedWindows.length > 0
+        ) {
             const existingWithRemoved = existingWindows
                 .filter((e) => !removedWindows.some((r) => r.wnd === e.wnd))
                 .map((w) => ({
@@ -194,7 +204,8 @@ export default function WindowManagerPage() {
             <For each={managedWindowsWithComm()}>
                 {(managedWindow) => (
                     <Button onclick={() => managedWindow.wnd.focus()}>
-                        {managedWindow.exposedCommunication.krunkerUrl()} ({managedWindow.exposedCommunication.communicatorState()})
+                        {managedWindow.exposedCommunication.krunkerUrl()} (
+                        {managedWindow.exposedCommunication.communicatorState()})
                     </Button>
                 )}
             </For>

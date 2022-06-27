@@ -11,7 +11,8 @@ export default function HomePage() {
 
     function handleInstallUserScript() {
         let url: string;
-        if (window.location.host.startsWith('localhost')) url = new URL('src/userScript/script.user.ts', window.location.href).href;
+        if (window.location.host.startsWith('localhost'))
+            url = new URL('src/userScript/script.user.ts', window.location.href).href;
         else url = new URL('script.user.js', window.location.href).href;
         window.open(url);
         setTimeout(() => {

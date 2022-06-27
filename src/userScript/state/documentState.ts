@@ -25,8 +25,12 @@ export function useDocumentReadyState() {
     const isCurrentLoading = () => document.readyState === 'loading';
     const isCurrentInteractive = () => document.readyState === 'interactive';
     const isCurrentComplete = () => document.readyState === 'complete';
-    const [isDocumentAtLeastLoading, setIsDocumentAtLeastLoading] = createSignal(isCurrentLoading() || isCurrentInteractive() || isCurrentComplete());
-    const [isDocumentAtLeastInteractive, setIsDocumentAtLeastInteractive] = createSignal(isCurrentInteractive() || isCurrentComplete());
+    const [isDocumentAtLeastLoading, setIsDocumentAtLeastLoading] = createSignal(
+        isCurrentLoading() || isCurrentInteractive() || isCurrentComplete()
+    );
+    const [isDocumentAtLeastInteractive, setIsDocumentAtLeastInteractive] = createSignal(
+        isCurrentInteractive() || isCurrentComplete()
+    );
     const [isDocumentAtLeastComplete, setIsDocumentAtLeastComplete] = createSignal(isCurrentComplete());
     localDocument.addEventListener('readystatechange', function readyStateChange() {
         setDocumentReadyState(document.readyState);

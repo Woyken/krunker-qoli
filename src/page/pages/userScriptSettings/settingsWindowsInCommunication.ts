@@ -3,7 +3,12 @@ import { createEffect, createSignal, onCleanup } from 'solid-js';
 import windowEndpointWithUnsubscribe from '../../../shared/utils/windowEndpointWithUnsubscribe';
 import localWindow from '../../../userScript/utils/localWindowCopy';
 import createScopedLogger from '../../../userScript/utils/logger';
-import { enabledFastRespawn, enabledAdPopupRemoval, enabledAutoReload, enabledWindowManager } from './state/userScriptSettings';
+import {
+    enabledFastRespawn,
+    enabledAdPopupRemoval,
+    enabledAutoReload,
+    enabledWindowManager,
+} from './state/userScriptSettings';
 
 const logger = createScopedLogger('[Window settings communicator]');
 
@@ -37,7 +42,9 @@ const exposedSettingsPerWindow = new Map<
 
 export function useExposeSettingsCommunication(exposeToWindow: Window) {
     logger.log('useExposeSettingsCommunication', exposeToWindow);
-    const [communicatorState, setCommunicatorState] = createSignal(SettingsCommunicationState.WaitingForCallbackRegistration);
+    const [communicatorState, setCommunicatorState] = createSignal(
+        SettingsCommunicationState.WaitingForCallbackRegistration
+    );
     const [krunkerUrl, setKrunkerUrl] = createSignal('https://krunker.io');
 
     const windowOnUnloadPromise = new Promise<void>((resolve) => {
@@ -46,7 +53,9 @@ export function useExposeSettingsCommunication(exposeToWindow: Window) {
         });
     });
 
-    const [currentCallback, setCurrentCallback] = createSignal(exposedSettingsPerWindow.get(exposeToWindow)?.lastCallback);
+    const [currentCallback, setCurrentCallback] = createSignal(
+        exposedSettingsPerWindow.get(exposeToWindow)?.lastCallback
+    );
     createEffect(() => {
         exposedSettingsPerWindow.set(exposeToWindow, { lastCallback: currentCallback() });
     });
@@ -68,13 +77,21 @@ export function useExposeSettingsCommunication(exposeToWindow: Window) {
             logger.log('registerSettingsCallback', apiVersion, callback);
             setCurrentCallback(() => callback);
 
-            if (communicatorState() === SettingsCommunicationState.WaitingForCallbackRegistration) setCommunicatorState(SettingsCommunicationState.ReadyToPushEvents);
+            if (communicatorState() === SettingsCommunicationState.WaitingForCallbackRegistration)
+                setCommunicatorState(SettingsCommunicationState.ReadyToPushEvents);
         },
         ping: 0,
     };
 
     createEffect(() => {
-        logger.log('settings callback', currentCallback(), enabledFastRespawn(), enabledAdPopupRemoval(), enabledAutoReload(), enabledWindowManager());
+        logger.log(
+            'settings callback',
+            currentCallback(),
+            enabledFastRespawn(),
+            enabledAdPopupRemoval(),
+            enabledAutoReload(),
+            enabledWindowManager()
+        );
         currentCallback()?.({
             enabledFastRespawn: enabledFastRespawn(),
             enabledAdPopupRemoval: enabledAdPopupRemoval(),

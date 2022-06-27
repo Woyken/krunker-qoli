@@ -4,7 +4,10 @@ import type { SavedManagedWindow } from './windowManagerPage';
 
 const logger = createScopedLogger('[useRemoveClosedWindows]');
 
-export function useRemoveClosedWindows(windows: Accessor<SavedManagedWindow[]>, setWindows: Setter<SavedManagedWindow[]>) {
+export function useRemoveClosedWindows(
+    windows: Accessor<SavedManagedWindow[]>,
+    setWindows: Setter<SavedManagedWindow[]>
+) {
     const interval = setInterval(() => {
         const areSomeClosed = windows().some((w) => w.wnd.closed);
         if (areSomeClosed) {

@@ -8,6 +8,8 @@ interface DocumentEvents {
 const documentEvents = createNanoEvents<DocumentEvents>();
 
 const originalExitPointerLock = document.exitPointerLock;
-document.exitPointerLock = createFunctionProxy(originalExitPointerLock, undefined, () => documentEvents.emit('calledExitPointerLock'));
+document.exitPointerLock = createFunctionProxy(originalExitPointerLock, undefined, () =>
+    documentEvents.emit('calledExitPointerLock')
+);
 
 export default documentEvents;

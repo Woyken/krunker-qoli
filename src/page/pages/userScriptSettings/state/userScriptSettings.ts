@@ -1,9 +1,17 @@
 import { createEffect, createSignal } from 'solid-js';
 
-export const [enabledAutoReload, setEnabledAutoReload] = createSignal((localStorage.getItem('enabledAutoReload') ?? 'true') === 'true');
-export const [enabledFastRespawn, setEnabledFastRespawn] = createSignal((localStorage.getItem('enabledFastRespawn') ?? 'true') === 'true');
-export const [enabledAdPopupRemoval, setEnabledAdPopupRemoval] = createSignal((localStorage.getItem('enabledAdPopupRemoval') ?? 'true') === 'true');
-export const [enabledWindowManager, setEnabledWindowManager] = createSignal((localStorage.getItem('enabledWindowManager') ?? 'false') === 'true');
+export const [enabledAutoReload, setEnabledAutoReload] = createSignal(
+    (localStorage.getItem('enabledAutoReload') ?? 'true') === 'true'
+);
+export const [enabledFastRespawn, setEnabledFastRespawn] = createSignal(
+    (localStorage.getItem('enabledFastRespawn') ?? 'true') === 'true'
+);
+export const [enabledAdPopupRemoval, setEnabledAdPopupRemoval] = createSignal(
+    (localStorage.getItem('enabledAdPopupRemoval') ?? 'true') === 'true'
+);
+export const [enabledWindowManager, setEnabledWindowManager] = createSignal(
+    (localStorage.getItem('enabledWindowManager') ?? 'false') === 'true'
+);
 
 // Persist state
 createEffect(() => {

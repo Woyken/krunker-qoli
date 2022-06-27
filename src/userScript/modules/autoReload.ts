@@ -39,7 +39,15 @@ export default function useAutoReload() {
         logger.log('pressing down reload button');
 
         const node = localArray.arrayFrom(localDocument.getElementsByTagName('canvas')).pop();
-        const eventData = { code: 'KeyR', composed: true, key: 'r', keyCode: 82, which: 82, bubbles: true, cancelable: true };
+        const eventData = {
+            code: 'KeyR',
+            composed: true,
+            key: 'r',
+            keyCode: 82,
+            which: 82,
+            bubbles: true,
+            cancelable: true,
+        };
         node?.dispatchEvent(new LocalKeyboardEvent('keydown', eventData));
         setWasReloadPressed(true);
     });
@@ -52,7 +60,15 @@ export default function useAutoReload() {
         logger.log('releasing reload button');
 
         const node = localArray.arrayFrom(localDocument.getElementsByTagName('canvas')).pop();
-        const eventData = { code: 'KeyR', composed: true, key: 'r', keyCode: 82, which: 82, bubbles: true, cancelable: true };
+        const eventData = {
+            code: 'KeyR',
+            composed: true,
+            key: 'r',
+            keyCode: 82,
+            which: 82,
+            bubbles: true,
+            cancelable: true,
+        };
         node?.dispatchEvent(new LocalKeyboardEvent('keyup', eventData));
     });
 }
