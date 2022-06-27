@@ -22,7 +22,6 @@ const endpointMessageListeners: Record<string, EventListenerOrEventListenerObjec
 // Stop our communication messages from reaching page js
 localWindow.addEventListener('message', (e) => {
     if (e.origin === qoliBaseUrl.origin) e.stopImmediatePropagation();
-    // TODO rewrite with map of arrays by type
     endpointMessageListeners.message?.forEach((listener) => {
         if ('handleEvent' in listener) listener.handleEvent(e);
         else listener(e);
