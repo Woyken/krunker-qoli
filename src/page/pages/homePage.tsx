@@ -26,8 +26,8 @@ export default function HomePage() {
 
     return (
         <>
-            <Typography variant="h2" component="div" gutterBottom>
-                Krunker Qoli
+            <Typography variant="h4" component="div" gutterBottom>
+                Krunker Quality Of Life Improvements
             </Typography>
             <Button onclick={() => window.open('https://violentmonkey.github.io/get-it/', '_self')}>
                 Get userscript manager

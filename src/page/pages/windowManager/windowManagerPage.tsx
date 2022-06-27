@@ -181,9 +181,6 @@ export default function WindowManagerPage() {
 
     return (
         <>
-            <Typography variant="h2" component="div" gutterBottom>
-                Krunker Qoli window manager
-            </Typography>
             <Typography variant="h4" component="div" gutterBottom>
                 Settings
             </Typography>

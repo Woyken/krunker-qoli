@@ -5,6 +5,7 @@ import CssBaseline from '@suid/material/CssBaseline';
 import GlobalStyles from '@suid/material/GlobalStyles';
 import type { SxPropsObject } from '@suid/system/sxProps';
 import Container from '@suid/material/Container';
+import Typography from '@suid/material/Typography';
 import UserScriptSettingsPage from './pages/userScriptSettings/userScriptSettingsPage';
 import HomePage from './pages/homePage';
 import { useAppTheme } from './theme';
@@ -26,6 +27,9 @@ export default function App() {
             <ThemeProviderMUI theme={theme()}>
                 <CssBaseline />
                 <Container>
+                    <Typography variant="h2" component="div" gutterBottom>
+                        Krunker Qoli
+                    </Typography>
                     <Router source={hashIntegration()}>
                         <Routes>
                             <Route path="/closeThisWindow" element={<CloseThisWindow />} />
