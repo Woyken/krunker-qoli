@@ -1,5 +1,5 @@
 import { expose } from 'comlink';
-import { createEffect, createSignal } from 'solid-js';
+import { createEffect, createSignal, onCleanup } from 'solid-js';
 import windowEndpointWithUnsubscribe from '../../../shared/utils/windowEndpointWithUnsubscribe';
 import localWindow from '../../../userScript/utils/localWindowCopy';
 import createScopedLogger from '../../../userScript/utils/logger';
@@ -28,6 +28,13 @@ export enum SettingsCommunicationState {
     ReadyToPushEvents,
 }
 
+const exposedSettingsPerWindow = new Map<
+    Window,
+    {
+        lastCallback: ((settings: UserScriptSettings) => void) | undefined;
+    }
+>();
+
 export function useExposeSettingsCommunication(exposeToWindow: Window) {
     logger.log('useExposeSettingsCommunication', exposeToWindow);
     const [communicatorState, setCommunicatorState] = createSignal(SettingsCommunicationState.WaitingForCallbackRegistration);
@@ -39,7 +46,10 @@ export function useExposeSettingsCommunication(exposeToWindow: Window) {
         });
     });
 
-    const [currentCallback, setCurrentCallback] = createSignal<(settings: UserScriptSettings) => void>();
+    const [currentCallback, setCurrentCallback] = createSignal(exposedSettingsPerWindow.get(exposeToWindow)?.lastCallback);
+    createEffect(() => {
+        exposedSettingsPerWindow.set(exposeToWindow, { lastCallback: currentCallback() });
+    });
 
     const exposedSettings: ExposedSettings = {
         onUnloadPromise: windowOnUnloadPromise,
@@ -64,6 +74,7 @@ export function useExposeSettingsCommunication(exposeToWindow: Window) {
     };
 
     createEffect(() => {
+        logger.log('settings callback', currentCallback(), enabledFastRespawn(), enabledAdPopupRemoval(), enabledAutoReload(), enabledWindowManager());
         currentCallback()?.({
             enabledFastRespawn: enabledFastRespawn(),
             enabledAdPopupRemoval: enabledAdPopupRemoval(),
@@ -73,11 +84,16 @@ export function useExposeSettingsCommunication(exposeToWindow: Window) {
     });
 
     const endpoint = windowEndpointWithUnsubscribe(exposeToWindow);
-    // TODO check if this cleanup works
-    // onCleanup(endpoint.unsubscribeAll.bind(endpoint));
+
+    onCleanup(endpoint.unsubscribeAll.bind(endpoint));
     expose(exposedSettings, endpoint);
 
-    const unsubscribeAll = endpoint.unsubscribeAll.bind(endpoint);
+    const unsubscribeAll = () => {
+        exposedSettingsPerWindow.delete(exposeToWindow);
+        endpoint.unsubscribeAll();
+    };
 
-    return { communicatorState, krunkerUrl, unsubscribeAll };
+    const ret = { communicatorState, krunkerUrl, unsubscribeAll };
+
+    return ret;
 }

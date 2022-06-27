@@ -134,8 +134,8 @@ async function useSettingsConnection(wnd: Window) {
                 logger.log('settings window unloaded');
                 setState('disposed');
             });
-            setState('available');
             logger.log('settings window available');
+            setState('available');
         })
         .catch((e) => {
             logger.log('settings window connection error', e);
@@ -143,7 +143,11 @@ async function useSettingsConnection(wnd: Window) {
         });
 
     createEffect(() => {
-        if (state() === 'available') remoteExposedSettings.registerSettingsCallback(apiVersion, proxy(settingsUpdatedCallback));
+        logger.log('settings connection state changed', state());
+        if (state() === 'available') {
+            logger.log('registering for remote settings callbacks');
+            remoteExposedSettings.registerSettingsCallback(apiVersion, proxy(settingsUpdatedCallback));
+        }
     });
 
     return {

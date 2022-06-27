@@ -44,23 +44,30 @@ function useExposeSettingsForSavedManagedWindow(savedManagedWindow: SavedManaged
 }
 
 function useExposeSettingsForSavedManagedWindowsWithComm(windows: Accessor<SavedManagedWindow[]>) {
+    let currentSavedManagedWindowsWithCommunication: SavedManagedWindowWithCommunication[] = [];
     const [windowsWithComm, setWindowsWithComm] = createSignal<SavedManagedWindowWithCommunication[]>([]);
     createEffect(() => {
         logger.log('useExposeSettingsForSavedManagedWindowsWithComm effect', windows());
 
-        const newWindows = windows().filter((w) => !windowsWithComm().find((wc) => wc.wnd === w.wnd));
-        const removedWindows = windowsWithComm().filter((wc) => !windows().find((w) => w.wnd === wc.wnd));
+        const newWindows = windows().filter((w) => !currentSavedManagedWindowsWithCommunication.find((wc) => wc.wnd === w.wnd));
+        const removedWindows = currentSavedManagedWindowsWithCommunication.filter((wc) => !windows().find((w) => w.wnd === wc.wnd));
         removedWindows.forEach((w) => w.exposedCommunication.unsubscribeAll());
         if (newWindows.length === 0 && removedWindows.length === 0) return;
-        const existingWindows = windowsWithComm().filter((wc) => !windows().find((w) => w.wnd === wc.wnd));
-        const newWindowsWithComm = newWindows.map<SavedManagedWindowWithCommunication>((w) => ({
-            ...w,
-            exposedCommunication: useExposeSettingsForSavedManagedWindow(w),
-        }));
+        const existingWindows = currentSavedManagedWindowsWithCommunication.filter((wc) => !windows().find((w) => w.wnd === wc.wnd));
         logger.log('newWindows', newWindows, 'removedWindows', removedWindows, 'existingWindows', existingWindows);
-        if (existingWindows.length < windowsWithComm().length || newWindowsWithComm.length > 0 || removedWindows.length > 0) {
-            const existingWithRemoved = existingWindows.filter((e) => !removedWindows.some((r) => r.wnd === e.wnd));
-            setWindowsWithComm([...existingWithRemoved, ...newWindowsWithComm]);
+        if (existingWindows.length < currentSavedManagedWindowsWithCommunication.length || newWindows.length > 0 || removedWindows.length > 0) {
+            const existingWithRemoved = existingWindows
+                .filter((e) => !removedWindows.some((r) => r.wnd === e.wnd))
+                .map((w) => ({
+                    ...w,
+                    exposedCommunication: useExposeSettingsForSavedManagedWindow(w),
+                }));
+            const newWindowsWithComm = newWindows.map<SavedManagedWindowWithCommunication>((w) => ({
+                ...w,
+                exposedCommunication: useExposeSettingsForSavedManagedWindow(w),
+            }));
+            currentSavedManagedWindowsWithCommunication = [...existingWithRemoved, ...newWindowsWithComm];
+            setWindowsWithComm(currentSavedManagedWindowsWithCommunication);
         }
     });
 
