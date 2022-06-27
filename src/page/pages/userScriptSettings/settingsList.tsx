@@ -1,7 +1,16 @@
 import Box from '@suid/material/Box';
 import Checkbox from '@suid/material/Checkbox';
 import FormControlLabel from '@suid/material/FormControlLabel';
-import { enabledAdPopupRemoval, enabledAutoReload, enabledFastRespawn, setEnabledAdPopupRemoval, setEnabledAutoReload, setEnabledFastRespawn } from './state/userScriptSettings';
+import {
+    enabledAdPopupRemoval,
+    enabledAutoReload,
+    enabledFastRespawn,
+    enabledWindowManager,
+    setEnabledAdPopupRemoval,
+    setEnabledAutoReload,
+    setEnabledFastRespawn,
+    setEnabledWindowManager,
+} from './state/userScriptSettings';
 
 export default function SettingsList() {
     return (
@@ -43,6 +52,18 @@ export default function SettingsList() {
                         />
                     }
                     label="Remove popup ads"
+                />
+                <FormControlLabel
+                    value="Open Krunker in new Window"
+                    control={
+                        <Checkbox
+                            checked={enabledWindowManager()}
+                            onChange={(event, checked) => {
+                                setEnabledWindowManager(checked);
+                            }}
+                        />
+                    }
+                    label="Open Krunker in new Window"
                 />
             </Box>
         </>

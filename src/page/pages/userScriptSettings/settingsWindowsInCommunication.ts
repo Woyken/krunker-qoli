@@ -1,7 +1,9 @@
-import { expose, windowEndpoint } from 'comlink';
+import { expose } from 'comlink';
 import { createEffect, createSignal } from 'solid-js';
+import windowEndpointWithUnsubscribe from '../../../shared/utils/windowEndpointWithUnsubscribe';
+import localWindow from '../../../userScript/utils/localWindowCopy';
 import createScopedLogger from '../../../userScript/utils/logger';
-import { enabledFastRespawn, enabledAdPopupRemoval, enabledAutoReload } from './state/userScriptSettings';
+import { enabledFastRespawn, enabledAdPopupRemoval, enabledAutoReload, enabledWindowManager } from './state/userScriptSettings';
 
 const logger = createScopedLogger('[Window settings communicator]');
 
@@ -9,29 +11,30 @@ export interface UserScriptSettings {
     enabledFastRespawn: boolean;
     enabledAdPopupRemoval: boolean;
     enabledAutoReload: boolean;
+    enabledWindowManager: boolean;
 }
 
 export interface ExposedSettings {
     onUnloadPromise: Promise<void>;
     doStufff: () => number;
-    registerCallback: (apiVersion: string, callback: (settings: UserScriptSettings) => void) => void;
+    scriptUnloading: () => void;
+    scriptLocationChanged: (newLocation: string) => void;
+    registerSettingsCallback: (apiVersion: string, callback: (settings: UserScriptSettings) => void) => void;
     ping: number;
 }
 
 export enum SettingsCommunicationState {
-    NoOpener,
     WaitingForCallbackRegistration,
     ReadyToPushEvents,
 }
 
-export function useSettingsCommunication() {
-    const [communicatorState, setCommunicatorState] = createSignal(SettingsCommunicationState.NoOpener);
-
-    if (!window.opener) return { communicatorState };
-    setCommunicatorState(SettingsCommunicationState.WaitingForCallbackRegistration);
+export function useExposeSettingsCommunication(exposeToWindow: Window) {
+    logger.log('useExposeSettingsCommunication', exposeToWindow);
+    const [communicatorState, setCommunicatorState] = createSignal(SettingsCommunicationState.WaitingForCallbackRegistration);
+    const [krunkerUrl, setKrunkerUrl] = createSignal('https://krunker.io');
 
     const windowOnUnloadPromise = new Promise<void>((resolve) => {
-        window.addEventListener('beforeunload', () => {
+        localWindow.addEventListener('beforeunload', () => {
             resolve();
         });
     });
@@ -44,8 +47,15 @@ export function useSettingsCommunication() {
             logger.log('TODO doStufff');
             return Math.random();
         },
+        scriptUnloading() {
+            logger.log('scriptUnloading, TODO');
+        },
+        scriptLocationChanged(newLocation: string) {
+            setKrunkerUrl(newLocation);
+        },
         // eslint-disable-next-line solid/reactivity
-        registerCallback: (apiVersion: string, callback: (settings: UserScriptSettings) => void) => {
+        registerSettingsCallback: (apiVersion: string, callback: (settings: UserScriptSettings) => void) => {
+            logger.log('registerSettingsCallback', apiVersion, callback);
             setCurrentCallback(() => callback);
 
             if (communicatorState() === SettingsCommunicationState.WaitingForCallbackRegistration) setCommunicatorState(SettingsCommunicationState.ReadyToPushEvents);
@@ -58,10 +68,16 @@ export function useSettingsCommunication() {
             enabledFastRespawn: enabledFastRespawn(),
             enabledAdPopupRemoval: enabledAdPopupRemoval(),
             enabledAutoReload: enabledAutoReload(),
+            enabledWindowManager: enabledWindowManager(),
         });
     });
 
-    expose(exposedSettings, windowEndpoint(window.opener));
+    const endpoint = windowEndpointWithUnsubscribe(exposeToWindow);
+    // TODO check if this cleanup works
+    // onCleanup(endpoint.unsubscribeAll.bind(endpoint));
+    expose(exposedSettings, endpoint);
 
-    return { communicatorState };
+    const unsubscribeAll = endpoint.unsubscribeAll.bind(endpoint);
+
+    return { communicatorState, krunkerUrl, unsubscribeAll };
 }

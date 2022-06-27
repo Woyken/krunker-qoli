@@ -7,6 +7,8 @@ import type { SxPropsObject } from '@suid/system/sxProps';
 import UserScriptSettingsPage from './pages/userScriptSettings/userScriptSettingsPage';
 import HomePage from './pages/homePage';
 import { useAppTheme } from './theme';
+import WindowManagerPage from './pages/windowManager/windowManagerPage';
+import CloseThisWindow from './pages/closeThisWindow';
 
 export default function App() {
     const theme = useAppTheme();
@@ -24,6 +26,8 @@ export default function App() {
                 <CssBaseline />
                 <Router source={hashIntegration()}>
                     <Routes>
+                        <Route path="/closeThisWindow" element={<CloseThisWindow />} />
+                        <Route path="/windowManager" element={<WindowManagerPage />} />
                         <Route path="/userScriptSettings" element={<UserScriptSettingsPage />} />
                         <Route path="/" element={<HomePage />} />
                     </Routes>

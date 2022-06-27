@@ -1,14 +1,14 @@
 import useAdPopupDismisser from './modules/adPopupDismisser';
 import useAutoReload from './modules/autoReload';
 import useFastRespawn from './modules/fastRespawn';
-import getRemoteSettings from './settingsWindow/settingsWindowsOutCommunication';
-import localWindow from './utils/localWindowCopy';
+import useWindowManagerModule from './modules/useWindowManagerModule';
+import useSettingsRemoteConnection from './settingsWindow/settingsWindowsOutCommunication';
 
 useAdPopupDismisser();
 useFastRespawn();
 useAutoReload();
+// useOnlyOneTab();
+// useReopenInNewWindow();
+useWindowManagerModule();
 
-// TODO some kind of init
-localWindow.setTimeout(() => {
-    getRemoteSettings();
-}, 100);
+useSettingsRemoteConnection();

@@ -1,5 +1,5 @@
 import { createEffect, createSignal, onCleanup } from 'solid-js';
-import documentReadyStateIsComplete from '../state/documentState';
+import { documentReadyStateIsComplete } from '../state/documentState';
 import useIsUserInGame from '../state/useIsUserInGame';
 import { enabledFastRespawn } from '../state/userScriptSettingsState';
 import localArray from '../utils/localArrayCopy';
@@ -27,7 +27,7 @@ export default function useAutoReload() {
         if (reloadMsgEl) {
             setIsReloadMessageVisible(reloadMsgEl.style.display === 'block');
             reloadMessageObserver.observe(reloadMsgEl, styleObserveConfig);
-            onCleanup(reloadMessageObserver.disconnect);
+            onCleanup(reloadMessageObserver.disconnect.bind(reloadMessageObserver));
         }
     });
 

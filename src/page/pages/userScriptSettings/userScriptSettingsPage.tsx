@@ -1,16 +1,17 @@
 import Typography from '@suid/material/Typography';
 import { createEffect, createSignal } from 'solid-js';
 import SettingsList from './settingsList';
-import { SettingsCommunicationState, useSettingsCommunication } from './settingsWindowsInCommunication';
+import { SettingsCommunicationState, useExposeSettingsCommunication } from './settingsWindowsInCommunication';
 
 function useCurrentStatusMessage() {
-    const { communicatorState } = useSettingsCommunication();
+    const { communicatorState } = useExposeSettingsCommunication(window.opener);
     const [statusMessage, setStatusMessage] = createSignal('Unknown state');
+    if (!window.opener) {
+        setStatusMessage('Not connected to Krunker instance');
+        return statusMessage;
+    }
     createEffect(() => {
         switch (communicatorState()) {
-            case SettingsCommunicationState.NoOpener:
-                setStatusMessage('Not connected to Krunker instance');
-                break;
             case SettingsCommunicationState.WaitingForCallbackRegistration:
                 setStatusMessage('Waiting for Krunker connection');
                 break;
