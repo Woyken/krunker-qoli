@@ -16,21 +16,16 @@ const LocalURL = URL;
 // const qoliBaseUrl = new LocalURL('http://localhost:3000');
 const qoliBaseUrl = new LocalURL('https://woyken.github.io/krunker-qoli');
 
-const endpointMessageListeners: {
-    type: string;
-    listener: EventListenerOrEventListenerObject;
-}[] = [];
+const endpointMessageListeners: Record<string, EventListenerOrEventListenerObject[]> = {};
 
 // Stop our communication messages from reaching page js
 localWindow.addEventListener('message', (e) => {
     if (e.origin === qoliBaseUrl.origin) e.stopImmediatePropagation();
     // TODO rewrite with map of arrays by type
-    endpointMessageListeners
-        .filter((l) => l.type === 'message')
-        .forEach(({ listener }) => {
-            if ('handleEvent' in listener) listener.handleEvent(e);
-            else listener(e);
-        });
+    endpointMessageListeners.message?.forEach((listener) => {
+        if ('handleEvent' in listener) listener.handleEvent(e);
+        else listener(e);
+    });
 });
 
 function settingsUpdatedCallback(settings: UserScriptSettings) {
@@ -81,11 +76,11 @@ async function useSettingsConnection(wnd: Window) {
         wnd,
         {
             addEventListener(type, listener) {
-                endpointMessageListeners.push({ type, listener });
+                if (endpointMessageListeners[type]) endpointMessageListeners[type].push(listener);
+                else endpointMessageListeners[type] = [listener];
             },
             removeEventListener(type, listener) {
-                const foundIdx = endpointMessageListeners.findIndex(({ type: t, listener: l }) => t === type && l === listener);
-                if (foundIdx >= 0) endpointMessageListeners.splice(foundIdx, 1);
+                if (endpointMessageListeners[type]) endpointMessageListeners[type] = endpointMessageListeners[type].filter((l) => l !== listener);
             },
         },
         '*'
