@@ -1,9 +1,11 @@
-import { proxy, Remote, windowEndpoint, wrap } from 'comlink';
+import { proxy, Remote, wrap } from 'comlink';
+import { onCleanup } from 'solid-js';
 import { apiVersion } from '../../shared/globals';
 import type { UserScriptSettings, ExposedSettings } from '../../page/pages/userScriptSettings/settingsWindowsInCommunication';
 import { setEnabledAdPopupDismisser, setEnabledAutoReload, setEnabledFastRespawn } from '../state/userScriptSettingsState';
 import localWindow from '../utils/localWindowCopy';
 import createScopedLogger from '../utils/logger';
+import windowEndpointWithUnsubscribe from '../../shared/utils/windowEndpointWithUnsubscribe';
 
 const logger = createScopedLogger('[Settings window communication]');
 
@@ -57,14 +59,19 @@ function promiseWrapperWithThrowTimeout<T>(inputPromise: Promise<T>, timeout: nu
 }
 
 async function openSettingsWindow() {
-    const wnd = localWindow.open(new LocalURL('#userScriptSettings', qoliBaseUrl).href, 'settingsWindow', 'width=400,height=400');
-    if (!wnd) {
-        alert('Failed to open settings window, allow popups for Krunker Qoli to work');
-        throw new Error('Failed to open settings window');
+    let wnd: Window;
+    if (window.opener) wnd = window.opener;
+    else {
+        const openedWnd = localWindow.open(new LocalURL('#userScriptSettings', qoliBaseUrl).href, 'settingsWindow', 'width=400,height=400');
+        if (!openedWnd) {
+            alert('Failed to open settings window, allow popups for Krunker Qoli to work');
+            throw new Error('Failed to open settings window');
+        }
+        wnd = openedWnd;
     }
     closeSettingsWindow();
     settingsWindow = wnd;
-    const endpoint = windowEndpoint(
+    const endpoint = windowEndpointWithUnsubscribe(
         settingsWindow,
         {
             addEventListener(type, listener) {
@@ -79,6 +86,7 @@ async function openSettingsWindow() {
     );
 
     const remoteExposedSettings = wrap<ExposedSettings>(endpoint);
+    onCleanup(() => endpoint.unsubscribeAll());
 
     const onSettingsWindowAvailablePromise = new Promise<void>((resolve) => {
         logger.log('waiting for settings window');
