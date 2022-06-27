@@ -57,7 +57,7 @@ function useSettingsWindow() {
         createEffect(() => {
             if (hasOpenedSettings) return;
             // Let's not open popup too soon, firefox will stop loading current page if we do
-            if (isDocumentAtLeastInteractive()) return;
+            if (!isDocumentAtLeastInteractive()) return;
             logger.log('opening new settings window');
             const openedWnd = localWindow.open(new LocalURL('#userScriptSettings', qoliBaseUrl).href, 'settingsWindow', 'width=400,height=450');
             hasOpenedSettings = true;
