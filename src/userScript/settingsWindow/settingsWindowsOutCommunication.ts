@@ -65,6 +65,11 @@ function useSettingsWindow() {
             }
             setWnd(openedWnd);
             onCleanup(() => openedWnd.close());
+            function handleBeforeUnload() {
+                openedWnd?.close();
+            }
+            localWindow.addEventListener('beforeunload', handleBeforeUnload);
+            onCleanup(() => localWindow.removeEventListener('beforeunload', handleBeforeUnload));
             useOnWindowClosedRemove(wnd, setWnd);
         });
     }
