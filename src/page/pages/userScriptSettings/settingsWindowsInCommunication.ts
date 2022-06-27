@@ -1,5 +1,5 @@
 import { expose } from 'comlink';
-import { createEffect, createSignal, onCleanup } from 'solid-js';
+import { createEffect, createSignal } from 'solid-js';
 import windowEndpointWithUnsubscribe from '../../../shared/utils/windowEndpointWithUnsubscribe';
 import createScopedLogger from '../../../userScript/utils/logger';
 import { enabledFastRespawn, enabledAdPopupRemoval, enabledAutoReload } from './state/userScriptSettings';
@@ -15,6 +15,7 @@ export interface UserScriptSettings {
 export interface ExposedSettings {
     onUnloadPromise: Promise<void>;
     doStufff: () => number;
+    scriptUnloading: () => void;
     registerSettingsCallback: (apiVersion: string, callback: (settings: UserScriptSettings) => void) => void;
     ping: number;
 }
@@ -40,6 +41,9 @@ export function useExposeSettingsCommunication(exposeToWindow: Window) {
         doStufff: () => {
             logger.log('TODO doStufff');
             return Math.random();
+        },
+        scriptUnloading() {
+            logger.log('scriptUnloading, TODO');
         },
         // eslint-disable-next-line solid/reactivity
         registerSettingsCallback: (apiVersion: string, callback: (settings: UserScriptSettings) => void) => {

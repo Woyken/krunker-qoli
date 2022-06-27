@@ -5,7 +5,7 @@ import localWindow from '../../../userScript/utils/localWindowCopy';
 import SettingsList from '../userScriptSettings/settingsList';
 import { useExposeSettingsCommunication } from '../userScriptSettings/settingsWindowsInCommunication';
 import useOnBeforeUnloadCloseWindows from './useOnBeforeUnloadCloseWindows';
-import useRemoveClosedWindows from './useRemoveClosedWindows';
+import { useRemoveClosedWindows } from './useRemoveClosedWindows';
 
 export interface SavedManagedWindow {
     wnd: Window;
