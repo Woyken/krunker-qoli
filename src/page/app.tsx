@@ -4,6 +4,7 @@ import { ThemeProvider as ThemeProviderMUI } from '@suid/material';
 import CssBaseline from '@suid/material/CssBaseline';
 import GlobalStyles from '@suid/material/GlobalStyles';
 import type { SxPropsObject } from '@suid/system/sxProps';
+import Container from '@suid/material/Container';
 import UserScriptSettingsPage from './pages/userScriptSettings/userScriptSettingsPage';
 import HomePage from './pages/homePage';
 import { useAppTheme } from './theme';
@@ -24,14 +25,16 @@ export default function App() {
             />
             <ThemeProviderMUI theme={theme()}>
                 <CssBaseline />
-                <Router source={hashIntegration()}>
-                    <Routes>
-                        <Route path="/closeThisWindow" element={<CloseThisWindow />} />
-                        <Route path="/windowManager" element={<WindowManagerPage />} />
-                        <Route path="/userScriptSettings" element={<UserScriptSettingsPage />} />
-                        <Route path="/" element={<HomePage />} />
-                    </Routes>
-                </Router>
+                <Container>
+                    <Router source={hashIntegration()}>
+                        <Routes>
+                            <Route path="/closeThisWindow" element={<CloseThisWindow />} />
+                            <Route path="/windowManager" element={<WindowManagerPage />} />
+                            <Route path="/userScriptSettings" element={<UserScriptSettingsPage />} />
+                            <Route path="/" element={<HomePage />} />
+                        </Routes>
+                    </Router>
+                </Container>
             </ThemeProviderMUI>
         </>
     );
