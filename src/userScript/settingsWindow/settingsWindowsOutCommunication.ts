@@ -14,8 +14,8 @@ const logger = createScopedLogger('[Settings window communication]');
 
 const LocalURL = URL;
 
-// const qoliBaseUrl = new LocalURL('http://localhost:3000');
-const qoliBaseUrl = new LocalURL('https://woyken.github.io/krunker-qoli');
+// export const qoliBaseUrl = new LocalURL('http://localhost:3000');
+export const qoliBaseUrl = new LocalURL('https://woyken.github.io/krunker-qoli');
 
 const endpointMessageListeners: Record<string, EventListenerOrEventListenerObject[]> = {};
 
