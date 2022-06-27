@@ -2,10 +2,13 @@ import Typography from '@suid/material/Typography';
 import { useNavigate, useSearchParams } from 'solid-app-router';
 import { type Accessor, createEffect, createSignal, onCleanup, For } from 'solid-js';
 import localWindow from '../../../userScript/utils/localWindowCopy';
+import createScopedLogger from '../../../userScript/utils/logger';
 import SettingsList from '../userScriptSettings/settingsList';
 import { useExposeSettingsCommunication } from '../userScriptSettings/settingsWindowsInCommunication';
 import useOnBeforeUnloadCloseWindows from './useOnBeforeUnloadCloseWindows';
 import { useRemoveClosedWindows } from './useRemoveClosedWindows';
+
+const logger = createScopedLogger('[WindowManagerPage]');
 
 export interface SavedManagedWindow {
     wnd: Window;
@@ -42,6 +45,8 @@ function useExposeSettingsForSavedManagedWindow(savedManagedWindow: SavedManaged
 function useExposeSettingsForSavedManagedWindowsWithComm(windows: Accessor<SavedManagedWindow[]>) {
     const [windowsWithComm, setWindowsWithComm] = createSignal<SavedManagedWindowWithCommunication[]>([]);
     createEffect(() => {
+        logger.log('useExposeSettingsForSavedManagedWindowsWithComm effect', windows());
+
         const newWindows = windows().filter((w) => !windowsWithComm().find((wc) => wc.wnd === w.wnd));
         const removedWindows = windowsWithComm().filter((wc) => !windows().find((w) => w.wnd === wc.wnd));
         removedWindows.forEach((w) => w.exposedCommunication.unsubscribeAll());
@@ -51,7 +56,11 @@ function useExposeSettingsForSavedManagedWindowsWithComm(windows: Accessor<Saved
             ...w,
             exposedCommunication: useExposeSettingsForSavedManagedWindow(w),
         }));
-        setWindowsWithComm([...existingWindows, ...newWindowsWithComm]);
+        logger.log('newWindows', newWindows, 'removedWindows', removedWindows, 'existingWindows', existingWindows);
+        if (existingWindows.length < windowsWithComm().length || newWindowsWithComm.length > 0 || removedWindows.length > 0) {
+            const existingWithRemoved = existingWindows.filter((e) => !removedWindows.some((r) => r.wnd === e.wnd));
+            setWindowsWithComm([...existingWithRemoved, ...newWindowsWithComm]);
+        }
     });
 
     return windowsWithComm;
@@ -88,6 +97,7 @@ function useBroadcastWindowManager() {
     }
 
     function handleMessage(e: MessageEvent<BroadcastWindowManagerMessage>) {
+        logger.log('handleMessage', e);
         switch (e.data.type) {
             case 'new window opened': {
                 // TODO consume target, focus existing window, redirect existing or create new window to e.data.krunkerUrl;
@@ -153,6 +163,7 @@ export default function WindowManagerPage() {
         setManagedWindows([...managedWindows(), { wnd, openedUrl: krunkerUrl }]);
     };
     onCleanup(() => {
+        logger.log('onCleanup, onOpenKrunker = undefined');
         manager.onOpenKrunker = undefined;
     });
 

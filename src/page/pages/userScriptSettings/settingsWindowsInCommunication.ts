@@ -1,6 +1,7 @@
 import { expose } from 'comlink';
 import { createEffect, createSignal } from 'solid-js';
 import windowEndpointWithUnsubscribe from '../../../shared/utils/windowEndpointWithUnsubscribe';
+import localWindow from '../../../userScript/utils/localWindowCopy';
 import createScopedLogger from '../../../userScript/utils/logger';
 import { enabledFastRespawn, enabledAdPopupRemoval, enabledAutoReload } from './state/userScriptSettings';
 
@@ -26,10 +27,11 @@ export enum SettingsCommunicationState {
 }
 
 export function useExposeSettingsCommunication(exposeToWindow: Window) {
+    logger.log('useExposeSettingsCommunication', exposeToWindow);
     const [communicatorState, setCommunicatorState] = createSignal(SettingsCommunicationState.WaitingForCallbackRegistration);
 
     const windowOnUnloadPromise = new Promise<void>((resolve) => {
-        window.addEventListener('beforeunload', () => {
+        localWindow.addEventListener('beforeunload', () => {
             resolve();
         });
     });
@@ -47,6 +49,7 @@ export function useExposeSettingsCommunication(exposeToWindow: Window) {
         },
         // eslint-disable-next-line solid/reactivity
         registerSettingsCallback: (apiVersion: string, callback: (settings: UserScriptSettings) => void) => {
+            logger.log('registerSettingsCallback', apiVersion, callback);
             setCurrentCallback(() => callback);
 
             if (communicatorState() === SettingsCommunicationState.WaitingForCallbackRegistration) setCommunicatorState(SettingsCommunicationState.ReadyToPushEvents);
