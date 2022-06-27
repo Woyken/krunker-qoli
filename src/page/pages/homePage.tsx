@@ -29,6 +29,10 @@ export default function HomePage() {
             <Typography variant="h2" component="div" gutterBottom>
                 Krunker Qoli
             </Typography>
+            <Button onclick={() => window.open('https://violentmonkey.github.io/get-it/', '_self')}>
+                Get userscript manager
+            </Button>
+            <br />
             <Button onclick={handleInstallUserScript}>Install userscript</Button>
             <br />
             <Button onclick={handleOpenWindowManager}>Open Krunker window manager</Button>
