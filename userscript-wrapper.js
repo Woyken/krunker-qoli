@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name         Krunker Quoli
 // @namespace    https://github.com/Woyken/krunker-qoli
-// @version      0.5.3
+// @version      0.5.4
 // @description  
 // @author       Woyken
 // @match        https://krunker.io/*
