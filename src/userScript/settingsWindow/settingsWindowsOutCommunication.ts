@@ -8,6 +8,7 @@ import createScopedLogger from '../utils/logger';
 import windowEndpointWithUnsubscribe from '../../shared/utils/windowEndpointWithUnsubscribe';
 import { useOnWindowClosedRemove } from '../../page/pages/windowManager/useRemoveClosedWindows';
 import documentReadyStateIsComplete from '../state/documentState';
+import windowEvents from '../utils/windowEvents';
 
 const logger = createScopedLogger('[Settings window communication]');
 
@@ -94,6 +95,12 @@ async function useSettingsConnection(wnd: Window) {
     }
     localWindow.addEventListener('beforeunload', handleBeforeUnload);
     onCleanup(() => localWindow.removeEventListener('beforeunload', handleBeforeUnload));
+
+    function handleLocationChange() {
+        remoteExposedSettings.scriptLocationChanged(window.location.href);
+    }
+    const locationChangedUnsub = windowEvents.on('locationChanged', handleLocationChange);
+    onCleanup(locationChangedUnsub);
 
     const onSettingsWindowAvailablePromise = new Promise<void>((resolve) => {
         logger.log('waiting for settings window');

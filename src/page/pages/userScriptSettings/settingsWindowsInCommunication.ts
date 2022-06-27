@@ -17,6 +17,7 @@ export interface ExposedSettings {
     onUnloadPromise: Promise<void>;
     doStufff: () => number;
     scriptUnloading: () => void;
+    scriptLocationChanged: (newLocation: string) => void;
     registerSettingsCallback: (apiVersion: string, callback: (settings: UserScriptSettings) => void) => void;
     ping: number;
 }
@@ -29,6 +30,7 @@ export enum SettingsCommunicationState {
 export function useExposeSettingsCommunication(exposeToWindow: Window) {
     logger.log('useExposeSettingsCommunication', exposeToWindow);
     const [communicatorState, setCommunicatorState] = createSignal(SettingsCommunicationState.WaitingForCallbackRegistration);
+    const [krunkerUrl, setKrunkerUrl] = createSignal('https://krunker.io');
 
     const windowOnUnloadPromise = new Promise<void>((resolve) => {
         localWindow.addEventListener('beforeunload', () => {
@@ -46,6 +48,9 @@ export function useExposeSettingsCommunication(exposeToWindow: Window) {
         },
         scriptUnloading() {
             logger.log('scriptUnloading, TODO');
+        },
+        scriptLocationChanged(newLocation: string) {
+            setKrunkerUrl(newLocation);
         },
         // eslint-disable-next-line solid/reactivity
         registerSettingsCallback: (apiVersion: string, callback: (settings: UserScriptSettings) => void) => {
@@ -72,5 +77,5 @@ export function useExposeSettingsCommunication(exposeToWindow: Window) {
 
     const unsubscribeAll = endpoint.unsubscribeAll.bind(endpoint);
 
-    return { communicatorState, unsubscribeAll };
+    return { communicatorState, krunkerUrl, unsubscribeAll };
 }

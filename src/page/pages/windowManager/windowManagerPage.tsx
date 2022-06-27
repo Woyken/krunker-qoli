@@ -187,7 +187,7 @@ export default function WindowManagerPage() {
             <For each={managedWindowsWithComm()}>
                 {(managedWindow) => (
                     <Button onclick={() => managedWindow.wnd.focus()}>
-                        {managedWindow.openedUrl} ({managedWindow.exposedCommunication.communicatorState()})
+                        {managedWindow.exposedCommunication.krunkerUrl()} ({managedWindow.exposedCommunication.communicatorState()})
                     </Button>
                 )}
             </For>
