@@ -21,7 +21,6 @@ export interface UserScriptSettings {
 
 export interface ExposedSettings {
     onUnloadPromise: Promise<void>;
-    doStufff: () => number;
     scriptUnloading: () => void;
     scriptLocationChanged: (newLocation: string) => void;
     registerSettingsCallback: (apiVersion: string, callback: (settings: UserScriptSettings) => void) => void;
@@ -60,10 +59,15 @@ export function useExposeSettingsCommunication(exposeToWindow: Window) {
         exposedSettingsPerWindow.set(exposeToWindow, { lastCallback: currentCallback() });
     });
 
+    const endpoint = windowEndpointWithUnsubscribe(exposeToWindow);
+    onCleanup(endpoint.unsubscribeAll);
+
     const exposedSettings: ExposedSettings = {
         onUnloadPromise: windowOnUnloadPromise,
         scriptUnloading() {
-            logger.log('scriptUnloading, TODO');
+            logger.log('[scriptUnloading]', 'closing window, unsubscribing from events', exposeToWindow);
+            exposeToWindow.close();
+            endpoint.unsubscribeAll();
         },
         scriptLocationChanged(newLocation: string) {
             setKrunkerUrl(newLocation);
@@ -78,6 +82,8 @@ export function useExposeSettingsCommunication(exposeToWindow: Window) {
         },
         ping: 0,
     };
+
+    expose(exposedSettings, endpoint);
 
     createEffect(() => {
         logger.log(
@@ -95,11 +101,6 @@ export function useExposeSettingsCommunication(exposeToWindow: Window) {
             enabledWindowManager: enabledWindowManager(),
         });
     });
-
-    const endpoint = windowEndpointWithUnsubscribe(exposeToWindow);
-
-    onCleanup(endpoint.unsubscribeAll.bind(endpoint));
-    expose(exposedSettings, endpoint);
 
     const unsubscribeAll = () => {
         exposedSettingsPerWindow.delete(exposeToWindow);
