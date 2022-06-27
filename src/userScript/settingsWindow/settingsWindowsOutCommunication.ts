@@ -7,7 +7,7 @@ import localWindow from '../utils/localWindowCopy';
 import createScopedLogger from '../utils/logger';
 import windowEndpointWithUnsubscribe from '../../shared/utils/windowEndpointWithUnsubscribe';
 import { useOnWindowClosedRemove } from '../../page/pages/windowManager/useRemoveClosedWindows';
-import documentReadyStateIsComplete from '../state/documentState';
+import { useDocumentReadyState } from '../state/documentState';
 import useLocationHref from '../state/useLocationHref';
 
 const logger = createScopedLogger('[Settings window communication]');
@@ -53,10 +53,12 @@ function useSettingsWindow() {
     // let wnd: Window;
     if (window.opener) setWnd(window.opener);
     else {
+        const { isDocumentAtLeastInteractive } = useDocumentReadyState();
         createEffect(() => {
             if (hasOpenedSettings) return;
             // Let's not open popup too soon, firefox will stop loading current page if we do
-            if (!documentReadyStateIsComplete()) return;
+            if (isDocumentAtLeastInteractive()) return;
+            logger.log('opening new settings window');
             const openedWnd = localWindow.open(new LocalURL('#userScriptSettings', qoliBaseUrl).href, 'settingsWindow', 'width=400,height=400');
             hasOpenedSettings = true;
             if (!openedWnd) {
@@ -64,8 +66,12 @@ function useSettingsWindow() {
                 throw new Error('Failed to open settings window');
             }
             setWnd(openedWnd);
-            onCleanup(() => openedWnd.close());
+            onCleanup(() => {
+                logger.log('onCleanup, closing settings window', openedWnd);
+                openedWnd.close();
+            });
             function handleBeforeUnload() {
+                logger.log('handleBeforeUnload, closing settings window', openedWnd);
                 openedWnd?.close();
             }
             localWindow.addEventListener('beforeunload', handleBeforeUnload);

@@ -1,5 +1,5 @@
 import { createEffect, createSignal, onCleanup } from 'solid-js';
-import documentReadyStateIsComplete from '../state/documentState';
+import { documentReadyStateIsComplete } from '../state/documentState';
 import useIsUserInGame from '../state/useIsUserInGame';
 import { enabledFastRespawn } from '../state/userScriptSettingsState';
 import localArray from '../utils/localArrayCopy';

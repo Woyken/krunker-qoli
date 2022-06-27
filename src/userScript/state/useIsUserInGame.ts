@@ -1,7 +1,7 @@
 import { createEffect, createSignal, onCleanup } from 'solid-js';
 import { createMutationObserverForStylesIfDisplayBlock, styleObserveConfig } from '../modules/utils/observerForStyles';
 import localDocument from '../utils/localDocumentCopy';
-import documentReadyStateIsComplete from './documentState';
+import { documentReadyStateIsComplete } from './documentState';
 
 export default function useIsUserInGame() {
     const [isUserInGame, setIsUserInGame] = createSignal(false);
