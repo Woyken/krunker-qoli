@@ -7,8 +7,6 @@ import useSettingsRemoteConnection from './settingsWindow/settingsWindowsOutComm
 useAdPopupDismisser();
 useFastRespawn();
 useAutoReload();
-// useOnlyOneTab();
-// useReopenInNewWindow();
 useWindowManagerModule();
 
 useSettingsRemoteConnection();
