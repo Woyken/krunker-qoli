@@ -65,9 +65,7 @@ export function useExposeSettingsCommunication(exposeToWindow: Window) {
     const exposedSettings: ExposedSettings = {
         onUnloadPromise: windowOnUnloadPromise,
         scriptUnloading() {
-            logger.log('[scriptUnloading]', 'closing window, unsubscribing from events', exposeToWindow);
-            exposeToWindow.close();
-            endpoint.unsubscribeAll();
+            logger.log('[scriptUnloading]', 'might be loading new page', exposeToWindow);
         },
         scriptLocationChanged(newLocation: string) {
             setKrunkerUrl(newLocation);
