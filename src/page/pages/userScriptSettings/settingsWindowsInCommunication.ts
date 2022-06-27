@@ -62,10 +62,6 @@ export function useExposeSettingsCommunication(exposeToWindow: Window) {
 
     const exposedSettings: ExposedSettings = {
         onUnloadPromise: windowOnUnloadPromise,
-        doStufff: () => {
-            logger.log('TODO doStufff');
-            return Math.random();
-        },
         scriptUnloading() {
             logger.log('scriptUnloading, TODO');
         },
