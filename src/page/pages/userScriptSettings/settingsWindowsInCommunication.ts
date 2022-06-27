@@ -59,7 +59,8 @@ export function useExposeSettingsCommunication(exposeToWindow: Window) {
     });
 
     const endpoint = windowEndpointWithUnsubscribe(exposeToWindow);
-    onCleanup(endpoint.unsubscribeAll.bind(endpoint));
+    // TODO check if this cleanup works
+    // onCleanup(endpoint.unsubscribeAll.bind(endpoint));
     expose(exposedSettings, endpoint);
 
     const unsubscribeAll = endpoint.unsubscribeAll.bind(endpoint);
