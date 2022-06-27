@@ -85,16 +85,14 @@ function useExposeSettingsForSavedManagedWindowsWithComm(windows: Accessor<Saved
 }
 
 function useBroadcastWindowManager() {
+    const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams<WindowManagerPageRouteParams>();
     const currentKrunkerUrl = searchParams.redirectKrunkerUrl;
     setSearchParams({ redirectKrunkerUrl: undefined });
-    const [isManager, setIsManager] = createSignal(true);
     const ret: {
         onOpenKrunker?: (url: string) => void;
-        isManager: Accessor<boolean>;
     } = {
         onOpenKrunker: undefined,
-        isManager,
     };
 
     const broadcast = new BroadcastChannel('window manager');
@@ -118,7 +116,7 @@ function useBroadcastWindowManager() {
         logger.log('handleMessage', e);
         switch (e.data.type) {
             case 'new window opened': {
-                // TODO consume target, focus existing window, redirect existing or create new window to e.data.krunkerUrl;
+                // this callback will be defined in parent scope
                 ret.onOpenKrunker?.(e.data.krunkerUrl);
 
                 const message: BroadcastWindowManagerMessage = {
@@ -130,9 +128,7 @@ function useBroadcastWindowManager() {
             }
             case 'new window consume': {
                 if (e.data.targetWindowId !== currentWindowId) break;
-                // TODO consume this window.
-                setIsManager(false);
-                // alert('aaaaaaaaaaaaaaa this should be removed');
+                navigate('/closeThisWindow', { replace: true });
                 break;
             }
             default:
@@ -147,7 +143,6 @@ function useBroadcastWindowManager() {
 // Potential redirection page, or promotes itself to manager
 // Start listening for other window messages
 export default function WindowManagerPage() {
-    const navigate = useNavigate();
     const manager = useBroadcastWindowManager();
     const [managedWindows, setManagedWindows] = createSignal<SavedManagedWindow[]>([]);
     useRemoveClosedWindows(managedWindows, setManagedWindows);
@@ -156,11 +151,6 @@ export default function WindowManagerPage() {
     let isCleanedUp = false;
     onCleanup(() => {
         isCleanedUp = true;
-    });
-
-    createEffect(() => {
-        if (manager.isManager()) return;
-        navigate('/closeThisWindow', { replace: true });
     });
 
     // eslint-disable-next-line solid/reactivity

@@ -133,8 +133,8 @@ async function useSettingsConnection(wnd: Window) {
                     clearInterval(intervalId);
                     resolve();
                 })
-                .catch(() => {
-                    // TODO
+                .catch((e) => {
+                    logger.log('[onSettingsWindowAvailablePromise]', 'error', e);
                 });
         }, 200);
     });
