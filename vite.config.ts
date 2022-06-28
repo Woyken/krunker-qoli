@@ -46,6 +46,7 @@ if (isScriptBuild)
             // files called "unsafe.***" will be ignored
             include: /(?!.*\/(unsafe\.|globalOverrides))(src\/.*)|(node_modules)/,
             Array: '@/shared/globalOverrides/Array',
+            console: '@/shared/globalOverrides/console',
             window: '@/shared/globalOverrides/window',
             document: '@/shared/globalOverrides/document',
             Error: '@/shared/globalOverrides/Error',
