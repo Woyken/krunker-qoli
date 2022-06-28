@@ -1,3 +1,5 @@
+const localLocation = window.location;
+
 const localWindow = {
     open: window.open.bind(window),
     addEventListener: window.addEventListener.bind(window),
@@ -7,7 +9,9 @@ const localWindow = {
     // opener doesn't change
     opener: window.opener,
     location: {
-        ...window.location,
+        get href() {
+            return localLocation.href;
+        },
         assign: window.location.assign.bind(window.location),
         reload: window.location.reload.bind(window.location),
         replace: window.location.replace.bind(window.location),
