@@ -4,6 +4,8 @@ const localWindow = {
     removeEventListener: window.removeEventListener.bind(window),
     setTimeout: window.setTimeout.bind(window),
     clearTimeout: window.clearTimeout.bind(window),
+    // opener doesn't change
+    opener: window.opener,
     location: {
         ...window.location,
         assign: window.location.assign.bind(window.location),
