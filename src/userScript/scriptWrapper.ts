@@ -3,5 +3,6 @@
 // We can forget about the compiled wrapper output and use script.user.js directly
 // It will only contain the logic we're actually using
 import('./script.user');
+// import './script.user';
 
 export {};

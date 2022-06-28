@@ -1,3 +1,21 @@
+export function fixedPrototype2<P, T extends { prototype: P }>(copyObj: T, origPrototype: P, origThis: T) {
+    const proto = origPrototype;
+    const props = Object.getOwnPropertyNames(proto);
+    for (let i = 0; i < props.length; i += 1) {
+        const value = Object.getOwnPropertyDescriptor(proto, props[i]);
+        if (value) {
+            if (typeof value.value === 'function') {
+                Object.defineProperty(copyObj, props[i], {
+                    ...value,
+                    value: value.value.bind(origThis),
+                });
+            } else {
+                // Object.defineProperty(copyObj, props[i], value);
+            }
+        }
+    }
+}
+
 export default function fixedPrototype<T>(obj: { prototype: T }, origPrototype: T) {
     const proto = origPrototype;
     const props = Object.getOwnPropertyNames(proto);
@@ -7,8 +25,7 @@ export default function fixedPrototype<T>(obj: { prototype: T }, origPrototype: 
     }
 }
 
-export function boundFunctions<T>(obj: T) {
-    const copyObj = Object.create(null);
+export function boundFunctions<T>(copyObj: T, obj: T) {
     const props = Object.getOwnPropertyNames(obj);
     for (let i = 0; i < props.length; i += 1) {
         const value = Object.getOwnPropertyDescriptor(obj, props[i]);
@@ -19,10 +36,8 @@ export function boundFunctions<T>(obj: T) {
                     value: value.value.bind(obj),
                 });
             } else {
-                Object.defineProperty(copyObj, props[i], value);
+                // Object.defineProperty(copyObj, props[i], value);
             }
         }
     }
-
-    return copyObj as T;
 }

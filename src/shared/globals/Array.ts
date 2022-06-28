@@ -1,5 +1,9 @@
-import spreadObjectAndBindFunctions from '../utils/spreadObjectAndBindFunctions';
+import fixedPrototype, { boundFunctions } from './fixedPrototype';
 
-const customArray = spreadObjectAndBindFunctions(window.Array as any) as typeof window.Array;
+// const customArray = spreadObjectAndBindFunctions(window.Array as any) as typeof window.Array;
+class CustomArray extends Array {}
 
-export default customArray;
+boundFunctions(CustomArray, Array);
+fixedPrototype(CustomArray, Array.prototype);
+
+export default CustomArray;

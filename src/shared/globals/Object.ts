@@ -1,5 +1,8 @@
-const customObjectConstructor = {
-    assign: Object.assign.bind(Object),
-};
+import fixedPrototype, { boundFunctions } from './fixedPrototype';
 
-export default customObjectConstructor;
+class CustomObject extends Object {}
+
+boundFunctions(CustomObject, Object);
+fixedPrototype(CustomObject, Object.prototype);
+
+export default CustomObject;

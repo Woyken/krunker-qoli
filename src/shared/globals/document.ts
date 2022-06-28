@@ -1,20 +1,4 @@
-function fixedPrototype2<T>(copyObj: any, origPrototype: T, origThis: any) {
-    const proto = origPrototype;
-    const props = Object.getOwnPropertyNames(proto);
-    for (let i = 0; i < props.length; i += 1) {
-        const value = Object.getOwnPropertyDescriptor(proto, props[i]);
-        if (value) {
-            if (typeof value.value === 'function') {
-                Object.defineProperty(copyObj, props[i], {
-                    ...value,
-                    value: value.value.bind(origThis),
-                });
-            } else {
-                Object.defineProperty(copyObj, props[i], value);
-            }
-        }
-    }
-}
+import { fixedPrototype2 } from './fixedPrototype';
 
 const customDocument = {
     get readyState() {
@@ -35,6 +19,16 @@ const customDocument = {
 // This one contains all the function on document
 // const DocumentPrototype = Object.getPrototypeOf(Object.getPrototypeOf(document));
 
-fixedPrototype2(customDocument, Object.getPrototypeOf(Object.getPrototypeOf(document)), document);
+fixedPrototype2(customDocument as any, Object.getPrototypeOf(Object.getPrototypeOf(document)), document);
+fixedPrototype2(
+    customDocument as any,
+    Object.getPrototypeOf(Object.getPrototypeOf(Object.getPrototypeOf(document))),
+    document
+);
+fixedPrototype2(
+    customDocument as any,
+    Object.getPrototypeOf(Object.getPrototypeOf(Object.getPrototypeOf(Object.getPrototypeOf(document)))),
+    document
+);
 
 export default customDocument;
