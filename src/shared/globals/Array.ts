@@ -1,9 +1,8 @@
-import fixedPrototype, { boundFunctions } from './fixedPrototype';
+import clonePrototype, { defineAndBindFunctionsFrom } from './fixedPrototype';
 
-// const customArray = spreadObjectAndBindFunctions(window.Array as any) as typeof window.Array;
 class CustomArray extends Array {}
 
-boundFunctions(CustomArray, Array);
-fixedPrototype(CustomArray, Array.prototype);
+defineAndBindFunctionsFrom(CustomArray, Array);
+clonePrototype(CustomArray, Array.prototype);
 
 export default CustomArray;

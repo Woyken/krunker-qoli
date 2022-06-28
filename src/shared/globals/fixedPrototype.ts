@@ -1,4 +1,8 @@
-export function fixedPrototype2<P, T extends { prototype: P }>(copyObj: T, origPrototype: P, origThis: T) {
+export function clonePrototypeFunctionsAndBindToInstance<P, T extends { prototype: P }>(
+    copyObj: T,
+    origPrototype: P,
+    origThis: T
+) {
     const proto = origPrototype;
     const props = Object.getOwnPropertyNames(proto);
     for (let i = 0; i < props.length; i += 1) {
@@ -10,13 +14,13 @@ export function fixedPrototype2<P, T extends { prototype: P }>(copyObj: T, origP
                     value: value.value.bind(origThis),
                 });
             } else {
-                // Object.defineProperty(copyObj, props[i], value);
+                // ignore other fields, better leave them undefined
             }
         }
     }
 }
 
-export default function fixedPrototype<T>(obj: { prototype: T }, origPrototype: T) {
+export default function clonePrototype<T>(obj: { prototype: T }, origPrototype: T) {
     const proto = origPrototype;
     const props = Object.getOwnPropertyNames(proto);
     for (let i = 0; i < props.length; i += 1) {
@@ -25,7 +29,7 @@ export default function fixedPrototype<T>(obj: { prototype: T }, origPrototype: 
     }
 }
 
-export function boundFunctions<T>(copyObj: T, obj: T) {
+export function defineAndBindFunctionsFrom<T>(copyObj: T, obj: T) {
     const props = Object.getOwnPropertyNames(obj);
     for (let i = 0; i < props.length; i += 1) {
         const value = Object.getOwnPropertyDescriptor(obj, props[i]);
@@ -36,7 +40,7 @@ export function boundFunctions<T>(copyObj: T, obj: T) {
                     value: value.value.bind(obj),
                 });
             } else {
-                // Object.defineProperty(copyObj, props[i], value);
+                // ignore other fields, better leave them undefined
             }
         }
     }

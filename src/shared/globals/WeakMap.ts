@@ -1,8 +1,8 @@
-import fixedPrototype, { boundFunctions } from './fixedPrototype';
+import clonePrototype, { defineAndBindFunctionsFrom } from './fixedPrototype';
 
 class CustomWeakMap extends WeakMap {}
 
-boundFunctions(CustomWeakMap, WeakMap);
-fixedPrototype(CustomWeakMap, WeakMap.prototype);
+defineAndBindFunctionsFrom(CustomWeakMap, WeakMap);
+clonePrototype(CustomWeakMap, WeakMap.prototype);
 
 export default CustomWeakMap;

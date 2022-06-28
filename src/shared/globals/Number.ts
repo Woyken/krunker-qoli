@@ -1,8 +1,8 @@
-import fixedPrototype, { boundFunctions } from './fixedPrototype';
+import clonePrototype, { defineAndBindFunctionsFrom } from './fixedPrototype';
 
 class CustomNumber extends Number {}
 
-boundFunctions(CustomNumber, Number);
-fixedPrototype(CustomNumber, Number.prototype);
+defineAndBindFunctionsFrom(CustomNumber, Number);
+clonePrototype(CustomNumber, Number.prototype);
 
 export default CustomNumber;

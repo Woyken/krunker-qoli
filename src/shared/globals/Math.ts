@@ -1,6 +1,6 @@
-import { boundFunctions } from './fixedPrototype';
+import { defineAndBindFunctionsFrom } from './fixedPrototype';
 
 const customMath = Object.create(null) as typeof Math;
-boundFunctions(customMath, Math);
+defineAndBindFunctionsFrom(customMath, Math);
 
 export default customMath;

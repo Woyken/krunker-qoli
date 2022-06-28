@@ -1,8 +1,8 @@
-import fixedPrototype, { boundFunctions } from './fixedPrototype';
+import clonePrototype, { defineAndBindFunctionsFrom } from './fixedPrototype';
 
 class CustomPromise extends Promise<unknown> {}
 
-boundFunctions(CustomPromise, Promise);
-fixedPrototype(CustomPromise, Promise.prototype);
+defineAndBindFunctionsFrom(CustomPromise, Promise);
+clonePrototype(CustomPromise, Promise.prototype);
 
 export default CustomPromise;

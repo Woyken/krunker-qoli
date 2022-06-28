@@ -1,8 +1,8 @@
-import fixedPrototype, { boundFunctions } from './fixedPrototype';
+import clonePrototype, { defineAndBindFunctionsFrom } from './fixedPrototype';
 
 class CustomObject extends Object {}
 
-boundFunctions(CustomObject, Object);
-fixedPrototype(CustomObject, Object.prototype);
+defineAndBindFunctionsFrom(CustomObject, Object);
+clonePrototype(CustomObject, Object.prototype);
 
 export default CustomObject;

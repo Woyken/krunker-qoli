@@ -1,7 +1,7 @@
-import fixedPrototype from './fixedPrototype';
+import clonePrototype from './fixedPrototype';
 
 class CustomMap extends Map {}
 
-fixedPrototype(CustomMap, Map.prototype);
+clonePrototype(CustomMap, Map.prototype);
 
 export default CustomMap;

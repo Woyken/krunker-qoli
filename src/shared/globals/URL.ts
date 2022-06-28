@@ -1,8 +1,8 @@
-import fixedPrototype, { boundFunctions } from './fixedPrototype';
+import clonePrototype, { defineAndBindFunctionsFrom } from './fixedPrototype';
 
 class CustomURL extends URL {}
 
-boundFunctions(CustomURL, URL);
-fixedPrototype(CustomURL, URL.prototype);
+defineAndBindFunctionsFrom(CustomURL, URL);
+clonePrototype(CustomURL, URL.prototype);
 
 export default CustomURL;
