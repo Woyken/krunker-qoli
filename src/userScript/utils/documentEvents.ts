@@ -1,4 +1,5 @@
 import { createNanoEvents } from 'nanoevents';
+import toReadonlyEventEmitter from '../../shared/utils/toReadonlyEventEmitter';
 import { createFunctionProxy } from './proxyUtils';
 
 interface DocumentEvents {
@@ -12,4 +13,4 @@ document.exitPointerLock = createFunctionProxy(originalExitPointerLock, undefine
     documentEvents.emit('calledExitPointerLock')
 );
 
-export default documentEvents;
+export default toReadonlyEventEmitter(documentEvents);

@@ -6,6 +6,7 @@ import banner from 'vite-plugin-banner';
 import { resolve } from 'path';
 import Checker from 'vite-plugin-checker';
 import eslint from 'vite-plugin-eslint';
+import inject from '@rollup/plugin-inject';
 import pkg from './package.json';
 
 const loaderModuleBanner = `
@@ -43,6 +44,28 @@ export default defineConfig({
         target: 'esnext',
         polyfillDynamicImport: false,
         rollupOptions: {
+            plugins: [
+                // inject({
+                //     exclude: /src\/shared\/globals\/.*/,
+                //     Array: '@/shared/globals/Array',
+                //     document: '@/shared/globals/document',
+                //     Error: '@/shared/globals/Error',
+                //     KeyboardEvent: '@/shared/globals/KeyboardEvent',
+                //     Map: '@/shared/globals/Map',
+                //     Math: '@/shared/globals/Math',
+                //     MessageChannel: '@/shared/globals/MessageChannel',
+                //     MouseEvent: '@/shared/globals/MouseEvent',
+                //     MutationObserver: '@/shared/globals/MutationObserver',
+                //     Number: '@/shared/globals/Number',
+                //     Object: '@/shared/globals/Object',
+                //     Promise: '@/shared/globals/Promise',
+                //     Proxy: '@/shared/globals/Proxy',
+                //     Symbol: '@/shared/globals/Symbol',
+                //     URL: '@/shared/globals/URL',
+                //     WeakMap: '@/shared/globals/WeakMap',
+                //     window: '@/shared/globals/window',
+                // }),
+            ],
             output: {
                 entryFileNames: '[name].js',
                 chunkFileNames: '[name].js',

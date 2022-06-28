@@ -1,5 +1,7 @@
+/* eslint-disable import/no-unresolved */
+/* eslint-disable import/extensions */
 import { createEffect, createSignal, onCleanup } from 'solid-js';
-import useDocumentIsFocused from '../../shared/hooks/useDocumentIsFocused';
+import useDocumentIsFocused from '@/shared/hooks/useDocumentIsFocused';
 import useDocumentIsPointerLocked from '../state/useDocumentIsPointerLocked';
 import useIsUserInGame from '../state/useIsUserInGame';
 import useIsUserInKillCam from '../state/useIsUserInKillCam';
