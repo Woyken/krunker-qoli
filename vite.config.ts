@@ -45,25 +45,29 @@ export default defineConfig({
         polyfillDynamicImport: false,
         rollupOptions: {
             plugins: [
+                // Overriding globals with custom objects. Copying and saving original prototype functions
+                // This way we can avoid prototype overrides. Will always call original function
+                // Some functions/properties might be undefined, need to check manually
                 inject({
-                    include: /(?!.*\/unsafe\.)(src\/((userScript\/.*)|(shared\/(?!globals\/).*)))|(node_modules)/,
-                    Array: '@/shared/globals/Array',
-                    window: '@/shared/globals/window',
-                    document: '@/shared/globals/document',
-                    Error: '@/shared/globals/Error',
-                    KeyboardEvent: '@/shared/globals/KeyboardEvent',
-                    Map: '@/shared/globals/Map',
-                    Math: '@/shared/globals/Math',
-                    MessageChannel: '@/shared/globals/MessageChannel',
-                    MouseEvent: '@/shared/globals/MouseEvent',
-                    MutationObserver: '@/shared/globals/MutationObserver',
-                    Number: '@/shared/globals/Number',
-                    Object: '@/shared/globals/Object',
-                    Promise: '@/shared/globals/Promise',
-                    Proxy: '@/shared/globals/Proxy',
-                    Symbol: '@/shared/globals/Symbol',
-                    URL: '@/shared/globals/URL',
-                    WeakMap: '@/shared/globals/WeakMap',
+                    // files called "unsafe.***" will be ignored
+                    include: /(?!.*\/(unsafe\.|globalOverrides))(src\/.*)|(node_modules)/,
+                    Array: '@/shared/globalOverrides/Array',
+                    window: '@/shared/globalOverrides/window',
+                    document: '@/shared/globalOverrides/document',
+                    Error: '@/shared/globalOverrides/Error',
+                    KeyboardEvent: '@/shared/globalOverrides/KeyboardEvent',
+                    Map: '@/shared/globalOverrides/Map',
+                    Math: '@/shared/globalOverrides/Math',
+                    MessageChannel: '@/shared/globalOverrides/MessageChannel',
+                    MouseEvent: '@/shared/globalOverrides/MouseEvent',
+                    MutationObserver: '@/shared/globalOverrides/MutationObserver',
+                    Number: '@/shared/globalOverrides/Number',
+                    Object: '@/shared/globalOverrides/Object',
+                    Promise: '@/shared/globalOverrides/Promise',
+                    Proxy: '@/shared/globalOverrides/Proxy',
+                    Symbol: '@/shared/globalOverrides/Symbol',
+                    URL: '@/shared/globalOverrides/URL',
+                    WeakMap: '@/shared/globalOverrides/WeakMap',
                 }),
             ],
             output: {
