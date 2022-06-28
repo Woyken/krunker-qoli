@@ -1,5 +1,4 @@
 import { createSignal } from 'solid-js';
-import localDocument from '../utils/localDocumentCopy';
 import createScopedLogger from '../utils/logger';
 
 const logger = createScopedLogger('[documentState]');
@@ -9,9 +8,9 @@ export { documentReadyStateIsComplete };
 
 if (document.readyState !== 'complete') {
     // log("document readyState", document.readyState, "adding listener, waiting for reasyState complete event");
-    localDocument.addEventListener('readystatechange', function readyStateChange() {
+    document.addEventListener('readystatechange', function readyStateChange() {
         if (document.readyState === 'complete') {
-            localDocument.removeEventListener('readystatechange', readyStateChange);
+            document.removeEventListener('readystatechange', readyStateChange);
             logger.log('document readyState complete event received, setting state true');
             setDocumentReadyStateIsComplete(true);
         }
@@ -32,13 +31,13 @@ export function useDocumentReadyState() {
         isCurrentInteractive() || isCurrentComplete()
     );
     const [isDocumentAtLeastComplete, setIsDocumentAtLeastComplete] = createSignal(isCurrentComplete());
-    localDocument.addEventListener('readystatechange', function readyStateChange() {
+    document.addEventListener('readystatechange', function readyStateChange() {
         setDocumentReadyState(document.readyState);
         setIsDocumentAtLeastLoading(isCurrentLoading() || isCurrentInteractive() || isCurrentComplete());
         setIsDocumentAtLeastInteractive(isCurrentInteractive() || isCurrentComplete());
         setIsDocumentAtLeastComplete(isCurrentComplete());
         if (isCurrentComplete()) {
-            localDocument.removeEventListener('readystatechange', readyStateChange);
+            document.removeEventListener('readystatechange', readyStateChange);
         }
     });
 

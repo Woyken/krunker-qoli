@@ -1,7 +1,6 @@
 import { createEffect, createSignal, onCleanup } from 'solid-js';
 import { documentReadyStateIsComplete } from '../state/documentState';
 import { enabledAdPopupDismisser } from '../state/userScriptSettingsState';
-import localDocument from '../utils/localDocumentCopy';
 import createScopedLogger from '../utils/logger';
 import { createMutationObserverForStylesIfDisplayBlock, styleObserveConfig } from './utils/observerForStyles';
 
@@ -17,7 +16,7 @@ export default function useAdPopupDismisser() {
 
         logger.log('document readyState complete, adding observer');
 
-        const el = localDocument.getElementById('popupHolder');
+        const el = document.getElementById('popupHolder');
         if (el) {
             setIsAdPopupActive(el.style.display === 'block');
             adPopupHolderObserver.observe(el, styleObserveConfig);
@@ -29,6 +28,6 @@ export default function useAdPopupDismisser() {
         if (!enabledAdPopupDismisser()) return;
 
         logger.log('isAdPopupActive effect', isAdPopupActive());
-        if (isAdPopupActive()) localDocument.getElementById('popupBack')?.click();
+        if (isAdPopupActive()) document.getElementById('popupBack')?.click();
     });
 }

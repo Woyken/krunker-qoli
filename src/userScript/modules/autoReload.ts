@@ -2,7 +2,6 @@ import { createEffect, createSignal, onCleanup } from 'solid-js';
 import { documentReadyStateIsComplete } from '../state/documentState';
 import useIsUserInGame from '../state/useIsUserInGame';
 import { enabledFastRespawn } from '../state/userScriptSettingsState';
-import localDocument from '../utils/localDocumentCopy';
 import createScopedLogger from '../utils/logger';
 import { createMutationObserverForStylesIfDisplayBlock, styleObserveConfig } from './utils/observerForStyles';
 
@@ -22,7 +21,7 @@ export default function useAutoReload() {
 
         logger.log('document readyState complete, adding observer');
 
-        const reloadMsgEl = localDocument.getElementById('reloadMsg');
+        const reloadMsgEl = document.getElementById('reloadMsg');
         if (reloadMsgEl) {
             setIsReloadMessageVisible(reloadMsgEl.style.display === 'block');
             reloadMessageObserver.observe(reloadMsgEl, styleObserveConfig);
@@ -37,7 +36,7 @@ export default function useAutoReload() {
 
         logger.log('pressing down reload button');
 
-        const node = Array.from(localDocument.getElementsByTagName('canvas')).pop();
+        const node = Array.from(document.getElementsByTagName('canvas')).pop();
         const eventData = {
             code: 'KeyR',
             composed: true,
@@ -58,7 +57,7 @@ export default function useAutoReload() {
 
         logger.log('releasing reload button');
 
-        const node = Array.from(localDocument.getElementsByTagName('canvas')).pop();
+        const node = Array.from(document.getElementsByTagName('canvas')).pop();
         const eventData = {
             code: 'KeyR',
             composed: true,

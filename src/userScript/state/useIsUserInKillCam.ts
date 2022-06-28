@@ -1,6 +1,5 @@
 import { createEffect, createSignal, onCleanup } from 'solid-js';
 import { createMutationObserverForStylesIfDisplayBlock, styleObserveConfig } from '../modules/utils/observerForStyles';
-import localDocument from '../utils/localDocumentCopy';
 import { documentReadyStateIsComplete } from './documentState';
 
 export default function useIsUserInKillCam() {
@@ -11,7 +10,7 @@ export default function useIsUserInKillCam() {
         // init observer when document is loaded
         if (!documentReadyStateIsComplete()) return;
 
-        const killCardHolderEl = localDocument.getElementById('killCardHolder');
+        const killCardHolderEl = document.getElementById('killCardHolder');
         if (killCardHolderEl) {
             setIsUserInKillCam(killCardHolderEl.style.display === 'block');
             killCardHolderObserver.observe(killCardHolderEl, styleObserveConfig);

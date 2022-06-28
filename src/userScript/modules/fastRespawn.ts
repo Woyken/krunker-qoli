@@ -7,7 +7,6 @@ import useIsUserInGame from '../state/useIsUserInGame';
 import useIsUserInKillCam from '../state/useIsUserInKillCam';
 import { enabledFastRespawn } from '../state/userScriptSettingsState';
 import documentEvents from '../utils/unsafe.documentEvents';
-import localDocument from '../utils/localDocumentCopy';
 import createScopedLogger from '../utils/logger';
 
 const LocalMouseEvent = MouseEvent;
@@ -16,7 +15,7 @@ const logger = createScopedLogger('[fastRespawn]');
 
 function tryToActivateGame() {
     logger.log('trying to activate game');
-    const node = Array.from(localDocument.getElementsByTagName('canvas')).pop();
+    const node = Array.from(document.getElementsByTagName('canvas')).pop();
     node?.dispatchEvent(new LocalMouseEvent('mousedown', { bubbles: true, cancelable: true }));
     node?.dispatchEvent(new LocalMouseEvent('mouseup', { bubbles: true, cancelable: true }));
 }

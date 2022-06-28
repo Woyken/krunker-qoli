@@ -1,9 +1,8 @@
 import { createSignal, onCleanup } from 'solid-js';
-import localDocument from '../../userScript/utils/localDocumentCopy';
 import localWindow from '../../userScript/utils/localWindowCopy';
 
 export default function useDocumentIsFocused() {
-    const [isWindowFocused, setIsWindowFocused] = createSignal(localDocument.hasFocus());
+    const [isWindowFocused, setIsWindowFocused] = createSignal(document.hasFocus());
     const handleFocus = () => setIsWindowFocused(true);
     const handleBlur = () => setIsWindowFocused(false);
 

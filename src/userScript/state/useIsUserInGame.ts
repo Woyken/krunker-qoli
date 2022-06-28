@@ -1,6 +1,5 @@
 import { createEffect, createSignal, onCleanup } from 'solid-js';
 import { createMutationObserverForStylesIfDisplayBlock, styleObserveConfig } from '../modules/utils/observerForStyles';
-import localDocument from '../utils/localDocumentCopy';
 import { documentReadyStateIsComplete } from './documentState';
 
 export default function useIsUserInGame() {
@@ -11,7 +10,7 @@ export default function useIsUserInGame() {
         // init observer when document is loaded
         if (!documentReadyStateIsComplete()) return;
 
-        const inGameUiEl = localDocument.getElementById('inGameUI');
+        const inGameUiEl = document.getElementById('inGameUI');
         if (inGameUiEl) {
             setIsUserInGame(inGameUiEl.style.display === 'block');
             inGameUiObserver.observe(inGameUiEl, styleObserveConfig);
