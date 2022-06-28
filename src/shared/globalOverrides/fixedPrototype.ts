@@ -20,6 +20,18 @@ export function clonePrototypeFunctionsAndBindToInstance<P, T extends { prototyp
     }
 }
 
+export function clonePrototypesFunctionsAndBindToInstanceTree<P, T extends { prototype: P }>(
+    copyObj: T,
+    objToGetPrototypesOf: T,
+    origThis: T
+) {
+    let currentPrototype = Object.getPrototypeOf(objToGetPrototypesOf);
+    while (currentPrototype != null) {
+        clonePrototypeFunctionsAndBindToInstance(copyObj, currentPrototype, origThis);
+        currentPrototype = Object.getPrototypeOf(currentPrototype);
+    }
+}
+
 export default function clonePrototype<T>(obj: { prototype: T }, origPrototype: T) {
     const proto = origPrototype;
     const props = Object.getOwnPropertyNames(proto);

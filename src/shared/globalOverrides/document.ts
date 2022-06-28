@@ -1,4 +1,4 @@
-import { clonePrototypeFunctionsAndBindToInstance } from './fixedPrototype';
+import { clonePrototypesFunctionsAndBindToInstanceTree } from './fixedPrototype';
 
 const customDocument = {
     get readyState() {
@@ -9,29 +9,6 @@ const customDocument = {
     },
 };
 
-// This one contains all the function on document
-// HTMLDocumentPrototype = Object.getPrototypeOf(document);
-// DocumentPrototype = Object.getPrototypeOf(HTMLDocumentPrototype);
-// NodePrototype = Object.getPrototypeOf(DocumentPrototype);
-// EventTargetPrototype = Object.getPrototypeOf(NodePrototype);
-
-// document specific methods, like getElementById
-clonePrototypeFunctionsAndBindToInstance(
-    customDocument as any,
-    Object.getPrototypeOf(Object.getPrototypeOf(document)),
-    document
-);
-// node specific methods, like appendChild
-clonePrototypeFunctionsAndBindToInstance(
-    customDocument as any,
-    Object.getPrototypeOf(Object.getPrototypeOf(Object.getPrototypeOf(document))),
-    document
-);
-//
-clonePrototypeFunctionsAndBindToInstance(
-    customDocument as any,
-    Object.getPrototypeOf(Object.getPrototypeOf(Object.getPrototypeOf(Object.getPrototypeOf(document)))),
-    document
-);
+clonePrototypesFunctionsAndBindToInstanceTree(customDocument as any, document, document);
 
 export default customDocument;
