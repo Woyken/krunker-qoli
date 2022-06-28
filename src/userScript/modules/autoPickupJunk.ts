@@ -1,7 +1,6 @@
 import { createEffect, createSignal, onCleanup } from 'solid-js';
 import { documentReadyStateIsComplete } from '../state/documentState';
 import useIsUserInGame from '../state/useIsUserInGame';
-import localArray from '../utils/localArrayCopy';
 import localDocument from '../utils/localDocumentCopy';
 import createScopedLogger from '../utils/logger';
 import { createMutationObserverForStylesIfDisplayBlock, styleObserveConfig } from './utils/observerForStyles';
@@ -39,7 +38,7 @@ export default function useAutoPickupJunk() {
 
         logger.log('pressing down interact button');
 
-        const node = localArray.arrayFrom(localDocument.getElementsByTagName('canvas')).pop();
+        const node = Array.from(localDocument.getElementsByTagName('canvas')).pop();
         const eventData = {
             code: 'KeyG',
             composed: true,
@@ -60,7 +59,7 @@ export default function useAutoPickupJunk() {
 
         logger.log('releasing interact button');
 
-        const node = localArray.arrayFrom(localDocument.getElementsByTagName('canvas')).pop();
+        const node = Array.from(localDocument.getElementsByTagName('canvas')).pop();
         const eventData = {
             code: 'KeyG',
             composed: true,

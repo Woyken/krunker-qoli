@@ -2,7 +2,6 @@ import { createEffect, createSignal, onCleanup } from 'solid-js';
 import { documentReadyStateIsComplete } from '../state/documentState';
 import useIsUserInGame from '../state/useIsUserInGame';
 import { enabledFastRespawn } from '../state/userScriptSettingsState';
-import localArray from '../utils/localArrayCopy';
 import localDocument from '../utils/localDocumentCopy';
 import createScopedLogger from '../utils/logger';
 import { createMutationObserverForStylesIfDisplayBlock, styleObserveConfig } from './utils/observerForStyles';
@@ -38,7 +37,7 @@ export default function useAutoReload() {
 
         logger.log('pressing down reload button');
 
-        const node = localArray.arrayFrom(localDocument.getElementsByTagName('canvas')).pop();
+        const node = Array.from(localDocument.getElementsByTagName('canvas')).pop();
         const eventData = {
             code: 'KeyR',
             composed: true,
@@ -59,7 +58,7 @@ export default function useAutoReload() {
 
         logger.log('releasing reload button');
 
-        const node = localArray.arrayFrom(localDocument.getElementsByTagName('canvas')).pop();
+        const node = Array.from(localDocument.getElementsByTagName('canvas')).pop();
         const eventData = {
             code: 'KeyR',
             composed: true,
