@@ -1,7 +1,6 @@
 import { expose } from 'comlink';
 import { createEffect, createSignal, onCleanup } from 'solid-js';
 import windowEndpointWithUnsubscribe from '../../../shared/utils/windowEndpointWithUnsubscribe';
-import localWindow from '../../../userScript/utils/localWindowCopy';
 import createScopedLogger from '../../../userScript/utils/logger';
 import {
     enabledFastRespawn,
@@ -47,7 +46,7 @@ export function useExposeSettingsCommunication(exposeToWindow: Window) {
     const [krunkerUrl, setKrunkerUrl] = createSignal('https://krunker.io');
 
     const windowOnUnloadPromise = new Promise<void>((resolve) => {
-        localWindow.addEventListener('beforeunload', () => {
+        window.addEventListener('beforeunload', () => {
             resolve();
         });
     });

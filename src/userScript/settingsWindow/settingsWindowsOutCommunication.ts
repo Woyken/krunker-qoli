@@ -11,7 +11,6 @@ import {
     setEnabledFastRespawn,
     setEnabledWindowManager,
 } from '../state/userScriptSettingsState';
-import localWindow from '../utils/localWindowCopy';
 import createScopedLogger from '../utils/logger';
 import windowEndpointWithUnsubscribe from '../../shared/utils/windowEndpointWithUnsubscribe';
 import { useOnWindowClosedRemove } from '../../page/pages/windowManager/useRemoveClosedWindows';
@@ -28,7 +27,7 @@ export const qoliBaseUrl = new LocalURL('https://woyken.github.io/krunker-qoli')
 const endpointMessageListeners: Record<string, EventListenerOrEventListenerObject[]> = {};
 
 // Stop our communication messages from reaching page js
-localWindow.addEventListener('message', (e) => {
+window.addEventListener('message', (e) => {
     if (e.origin === qoliBaseUrl.origin) e.stopImmediatePropagation();
     endpointMessageListeners.message?.forEach((listener) => {
         if ('handleEvent' in listener) listener.handleEvent(e);
@@ -57,7 +56,7 @@ let hasOpenedSettings = false;
 
 function useSettingsWindow() {
     const [wnd, setWnd] = createSignal<Window>();
-    if (localWindow.opener) setWnd(localWindow.opener);
+    if (window.opener) setWnd(window.opener);
     else {
         const { isDocumentAtLeastInteractive } = useDocumentReadyState();
         createEffect(() => {
@@ -65,7 +64,7 @@ function useSettingsWindow() {
             // Let's not open popup too soon, firefox will stop loading current page if we do
             if (!isDocumentAtLeastInteractive()) return;
             logger.log('opening new settings window');
-            const openedWnd = localWindow.open(
+            const openedWnd = window.open(
                 new LocalURL('#userScriptSettings', qoliBaseUrl).href,
                 'settingsWindow',
                 'width=400,height=450'
@@ -84,8 +83,8 @@ function useSettingsWindow() {
                 logger.log('handleBeforeUnload, closing settings window', openedWnd);
                 openedWnd?.close();
             }
-            localWindow.addEventListener('beforeunload', handleBeforeUnload);
-            onCleanup(() => localWindow.removeEventListener('beforeunload', handleBeforeUnload));
+            window.addEventListener('beforeunload', handleBeforeUnload);
+            onCleanup(() => window.removeEventListener('beforeunload', handleBeforeUnload));
             useOnWindowClosedRemove(wnd, setWnd);
         });
     }
@@ -116,8 +115,8 @@ async function useSettingsConnection(wnd: Window) {
     function handleBeforeUnload() {
         remoteExposedSettings.scriptUnloading().catch((e) => logger.log('on beforeUnload error', e));
     }
-    localWindow.addEventListener('beforeunload', handleBeforeUnload);
-    onCleanup(() => localWindow.removeEventListener('beforeunload', handleBeforeUnload));
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    onCleanup(() => window.removeEventListener('beforeunload', handleBeforeUnload));
 
     const currentLocationHref = useLocationHref();
     createEffect(() => {

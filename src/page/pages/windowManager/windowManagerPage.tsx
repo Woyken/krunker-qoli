@@ -2,7 +2,6 @@ import Button from '@suid/material/Button';
 import Typography from '@suid/material/Typography';
 import { useNavigate, useSearchParams } from 'solid-app-router';
 import { type Accessor, createEffect, createSignal, onCleanup, For, Show } from 'solid-js';
-import localWindow from '../../../userScript/utils/localWindowCopy';
 import createScopedLogger from '../../../userScript/utils/logger';
 import SettingsList from '../userScriptSettings/settingsList';
 import { useExposeSettingsCommunication } from '../userScriptSettings/settingsWindowsInCommunication';
@@ -161,7 +160,7 @@ export default function WindowManagerPage() {
             firstWnd.wnd.focus();
             return;
         }
-        const wnd = localWindow.open(krunkerUrl, 'krunker', `width=${window.innerWidth},height=${window.innerHeight}`);
+        const wnd = window.open(krunkerUrl, 'krunker', `width=${window.innerWidth},height=${window.innerHeight}`);
         if (isCleanedUp) {
             // wow, this is surprising. While window is being opened, broadcast message can be received, and looks like current thread is paused until broadcast message is handled
             wnd?.close();

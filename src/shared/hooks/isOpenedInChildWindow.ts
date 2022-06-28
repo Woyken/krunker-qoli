@@ -1,6 +1,5 @@
 import { createSignal } from 'solid-js';
-import localWindow from '../../userScript/utils/localWindowCopy';
 
-const [isOpenedInChildWindow] = createSignal(localWindow.opener != null);
+const [isOpenedInChildWindow] = createSignal(window.opener != null);
 
 export default isOpenedInChildWindow;
