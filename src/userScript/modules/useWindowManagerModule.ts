@@ -6,8 +6,8 @@ import localWindow from '../utils/localWindowCopy';
 export default function useWindowManagerModule() {
     createEffect(() => {
         if (!enabledWindowManager()) return;
-        if (window.opener) return;
-        const krunkerRedirectUrl = window.location.href;
+        if (localWindow.opener) return;
+        const krunkerRedirectUrl = localWindow.location.href;
         const windowManagerUrl = new URL(`#windowManager?redirectKrunkerUrl=${krunkerRedirectUrl}`, qoliBaseUrl);
         localWindow.open(windowManagerUrl, '_self');
     });

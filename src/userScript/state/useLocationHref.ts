@@ -1,10 +1,11 @@
 import { createSignal } from 'solid-js';
-import windowEvents from '../utils/windowEvents';
+import localWindow from '../utils/localWindowCopy';
+import windowEvents from '../utils/unsafe.windowEvents';
 
 export default function useLocationHref() {
-    const [currentLocationHref, setCurrentLocationHref] = createSignal(window.location.href);
+    const [currentLocationHref, setCurrentLocationHref] = createSignal(localWindow.location.href);
     windowEvents.on('locationChanged', () => {
-        setCurrentLocationHref(window.location.href);
+        setCurrentLocationHref(localWindow.location.href);
     });
 
     return currentLocationHref;

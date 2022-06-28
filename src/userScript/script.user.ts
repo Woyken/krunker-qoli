@@ -15,6 +15,7 @@ function initModules() {
         useAdPopupDismisser();
         useFastRespawn();
         useAutoReload();
+        // useAutoPickupJunk();
         useWindowManagerModule();
         useSettingsRemoteConnection();
     });

@@ -1,4 +1,5 @@
 import { createNanoEvents } from 'nanoevents';
+import toReadonlyEventEmitter from '../../shared/utils/toReadonlyEventEmitter';
 import localWindow from './localWindowCopy';
 import { createFunctionProxy } from './proxyUtils';
 
@@ -20,4 +21,4 @@ window.history.replaceState = createFunctionProxy(originalHistoryReplaceState, u
 localWindow.addEventListener('hashchange', () => windowEvents.emit('locationChanged'));
 localWindow.addEventListener('popstate', () => windowEvents.emit('locationChanged'));
 
-export default windowEvents;
+export default toReadonlyEventEmitter(windowEvents);

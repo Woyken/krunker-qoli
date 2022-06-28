@@ -57,7 +57,7 @@ let hasOpenedSettings = false;
 
 function useSettingsWindow() {
     const [wnd, setWnd] = createSignal<Window>();
-    if (window.opener) setWnd(window.opener);
+    if (localWindow.opener) setWnd(localWindow.opener);
     else {
         const { isDocumentAtLeastInteractive } = useDocumentReadyState();
         createEffect(() => {
