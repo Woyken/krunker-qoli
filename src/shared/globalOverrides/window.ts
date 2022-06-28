@@ -1,4 +1,4 @@
-import { clonePrototypesFunctionsAndBindToInstanceTree } from './fixedPrototype';
+import { clonePrototypesFunctionsAndBindToInstanceTree, defineAndBindFunctionsFrom } from './fixedPrototype';
 
 const customWindow = {
     opener: window.opener,
@@ -14,5 +14,7 @@ const customWindow = {
 
 clonePrototypesFunctionsAndBindToInstanceTree(customWindow as any, window, window);
 clonePrototypesFunctionsAndBindToInstanceTree(customWindow.location as any, window.location, window.location);
+defineAndBindFunctionsFrom(customWindow.location, window.location);
+defineAndBindFunctionsFrom(customWindow, window);
 
 export default customWindow;
