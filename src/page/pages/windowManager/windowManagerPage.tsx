@@ -192,7 +192,7 @@ export default function WindowManagerPage() {
                 {(managedWindow) => (
                     <Button onclick={() => managedWindow.wnd.focus()}>
                         {managedWindow.exposedCommunication.krunkerUrl()} (
-                        {managedWindow.exposedCommunication.communicatorState()})
+                        {`${managedWindow.exposedCommunication.communicatorState()}`})
                     </Button>
                 )}
             </For>
