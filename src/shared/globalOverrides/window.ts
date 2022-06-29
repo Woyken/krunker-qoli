@@ -1,15 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { clonePrototypesFunctionsAndBindToInstanceTree, defineAndBindFunctionsFrom } from './fixedPrototype';
 
 const customWindow = {
-    opener: window.opener,
-    location: {
-        get href(): string {
-            return window.location.href;
-        },
-        set href(value: string) {
-            window.location.href = value;
-        },
-    },
+    location: {},
 };
 
 clonePrototypesFunctionsAndBindToInstanceTree(customWindow as any, window, window);

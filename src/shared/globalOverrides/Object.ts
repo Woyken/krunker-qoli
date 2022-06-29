@@ -1,8 +1,5 @@
-import clonePrototype, { defineAndBindFunctionsFrom } from './fixedPrototype';
+import { createExtendedClassCopyPrototypesAndBindOwned } from './fixedPrototype';
 
-class CustomObject extends Object {}
-
-defineAndBindFunctionsFrom(CustomObject, Object);
-clonePrototype(CustomObject, Object.prototype);
+const CustomObject = createExtendedClassCopyPrototypesAndBindOwned(Object);
 
 export default CustomObject;

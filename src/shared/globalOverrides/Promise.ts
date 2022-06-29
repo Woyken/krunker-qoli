@@ -1,8 +1,5 @@
-import clonePrototype, { defineAndBindFunctionsFrom } from './fixedPrototype';
+import { createExtendedClassCopyPrototypesAndBindOwned } from './fixedPrototype';
 
-class CustomPromise extends Promise<unknown> {}
-
-defineAndBindFunctionsFrom(CustomPromise, Promise);
-clonePrototype(CustomPromise, Promise.prototype);
+const CustomPromise = createExtendedClassCopyPrototypesAndBindOwned(Promise<unknown>);
 
 export default CustomPromise;

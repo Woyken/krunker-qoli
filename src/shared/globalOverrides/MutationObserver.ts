@@ -1,7 +1,5 @@
-import clonePrototype from './fixedPrototype';
+import { createExtendedClassCopyPrototypesAndBindOwned } from './fixedPrototype';
 
-class CustomMutationObserver extends MutationObserver {}
-
-clonePrototype(CustomMutationObserver, MutationObserver.prototype);
+const CustomMutationObserver = createExtendedClassCopyPrototypesAndBindOwned(MutationObserver);
 
 export default CustomMutationObserver;

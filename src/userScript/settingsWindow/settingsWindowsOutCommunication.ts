@@ -71,7 +71,7 @@ function useSettingsWindow() {
             );
             hasOpenedSettings = true;
             if (!openedWnd) {
-                alert('Failed to open settings window, allow popups for Krunker Qoli to work');
+                window.alert('Failed to open settings window, allow popups for Krunker Qoli to work');
                 throw new Error('Failed to open settings window');
             }
             setWnd(openedWnd);

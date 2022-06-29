@@ -1,7 +1,5 @@
-import clonePrototype from './fixedPrototype';
+import { createExtendedClassCopyPrototypesAndBindOwned } from './fixedPrototype';
 
-class CustomError extends Error {}
-
-clonePrototype(CustomError, Error.prototype);
+const CustomError = createExtendedClassCopyPrototypesAndBindOwned(Error);
 
 export default CustomError;

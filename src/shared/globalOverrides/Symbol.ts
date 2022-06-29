@@ -1,12 +1,12 @@
-import clonePrototype, { defineAndBindFunctionsFrom } from './fixedPrototype';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { defineAndBindFunctionsFrom } from './fixedPrototype';
 
-const LocalSymbol = Symbol;
+const LocalSymbolApply = Symbol.apply.bind(Symbol);
 
-function CustomSymbol(description?: string | number) {
-    return LocalSymbol(description);
+function CustomSymbol(...args: Parameters<typeof Symbol>) {
+    return LocalSymbolApply(null, args);
 }
 
 defineAndBindFunctionsFrom(CustomSymbol, Symbol);
-clonePrototype(CustomSymbol, Symbol.prototype);
 
 export default CustomSymbol;

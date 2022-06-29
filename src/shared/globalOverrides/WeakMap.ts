@@ -1,8 +1,5 @@
-import clonePrototype, { defineAndBindFunctionsFrom } from './fixedPrototype';
+import { createExtendedClassCopyPrototypesAndBindOwned } from './fixedPrototype';
 
-class CustomWeakMap extends WeakMap {}
-
-defineAndBindFunctionsFrom(CustomWeakMap, WeakMap);
-clonePrototype(CustomWeakMap, WeakMap.prototype);
+const CustomWeakMap = createExtendedClassCopyPrototypesAndBindOwned(WeakMap);
 
 export default CustomWeakMap;

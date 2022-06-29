@@ -1,8 +1,5 @@
-import clonePrototype, { defineAndBindFunctionsFrom } from './fixedPrototype';
+import { createExtendedClassCopyPrototypesAndBindOwned } from './fixedPrototype';
 
-class CustomArray extends Array {}
-
-defineAndBindFunctionsFrom(CustomArray, Array);
-clonePrototype(CustomArray, Array.prototype);
+const CustomArray = createExtendedClassCopyPrototypesAndBindOwned(Array);
 
 export default CustomArray;
