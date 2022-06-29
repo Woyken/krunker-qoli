@@ -51,7 +51,7 @@ export function getClonedPrototype(existingPrototype: unknown) {
 }
 
 export function defineAndBindFunctionsFrom<T>(copyObj: T, obj: T) {
-    const props = Object.getOwnPropertyNames(obj);
+    const props = Object.getOwnPropertyNames(obj).filter((p) => !['prototype'].includes(p));
     for (let i = 0; i < props.length; i += 1) {
         const value = Object.getOwnPropertyDescriptor(obj, props[i]);
         if (value) {
