@@ -57,10 +57,6 @@ export function defineAndBindFunctionsFrom<T>(copyObj: T, obj: T) {
             if (value.get) descriptor.get = value.get.bind(obj);
             if (value.set) descriptor.set = value.set.bind(obj);
             if (typeof value.value === 'function') descriptor.value = value.value.bind(obj);
-            // else if (value.value && !descriptor.get) {
-            //     descriptor.writable = true;
-            //     descriptor.get = () => (obj as any)[props[i]];
-            // }
             if (descriptor.get || descriptor.set || descriptor.value)
                 Object.defineProperty(copyObj, props[i], descriptor);
         }
