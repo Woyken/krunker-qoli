@@ -1,13 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { clonePrototypesFunctionsAndBindToInstanceTree } from './fixedPrototype';
 
-const customDocument = {
-    get readyState() {
-        return document.readyState;
-    },
-    get pointerLockElement() {
-        return document.pointerLockElement;
-    },
-};
+// This is going to be just simple object with all native functions taken from native prototype, bound to native instance and just copied to this object
+const customDocument = {};
 
 clonePrototypesFunctionsAndBindToInstanceTree(customDocument as any, document, document);
 

@@ -1,7 +1,5 @@
-import { getClonedPrototype } from './fixedPrototype';
+import { createExtendedClassCopyPrototypesAndBindOwned } from './fixedPrototype';
 
-class CustomMessageChannel extends MessageChannel {}
-
-TODO = getClonedPrototype(CustomMessageChannel, MessageChannel.prototype);
+const CustomMessageChannel = createExtendedClassCopyPrototypesAndBindOwned(MessageChannel);
 
 export default CustomMessageChannel;

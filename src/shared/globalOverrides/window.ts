@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { clonePrototypesFunctionsAndBindToInstanceTree, defineAndBindFunctionsFrom } from './fixedPrototype';
 
 const customWindow = {
@@ -16,15 +17,5 @@ clonePrototypesFunctionsAndBindToInstanceTree(customWindow as any, window, windo
 clonePrototypesFunctionsAndBindToInstanceTree(customWindow.location as any, window.location, window.location);
 defineAndBindFunctionsFrom(customWindow.location, window.location);
 defineAndBindFunctionsFrom(customWindow, window);
-
-function clonePrototypeTree(existingPrototype: any) {
-    let currentPrototype = existingPrototype;
-    while (currentPrototype != null) {
-        clonePrototypeFunctionsAndBindToInstance(copyObj, currentPrototype, origThis);
-        currentPrototype = Object.getPrototypeOf(currentPrototype);
-    }
-}
-
-getClonedPrototype(customWindow, window);
 
 export default customWindow;

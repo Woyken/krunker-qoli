@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export function clonePrototypeFunctionsAndBindToInstance<P, T extends { prototype: P }>(
     copyObj: T,
     origPrototype: P,
@@ -70,4 +71,18 @@ export function defineAndBindFunctionsFrom<T>(copyObj: T, obj: T) {
                 Object.defineProperty(copyObj, props[i], descriptor);
         }
     }
+}
+
+const mixinClassFactory = (superclass: any, customPrototype: any) =>
+    class extends superclass {
+        constructor(...items: unknown[]) {
+            super(...items);
+            Object.setPrototypeOf(this, customPrototype);
+        }
+    };
+
+export function createExtendedClassCopyPrototypesAndBindOwned<Y, T extends { prototype: Y }>(nativeType: T): T {
+    const CustomNativeWrapper = mixinClassFactory(nativeType, getClonedPrototype(nativeType.prototype));
+    defineAndBindFunctionsFrom(CustomNativeWrapper as unknown, nativeType);
+    return CustomNativeWrapper as any;
 }

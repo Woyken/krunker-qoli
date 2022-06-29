@@ -1,8 +1,5 @@
-import { getClonedPrototype, defineAndBindFunctionsFrom } from './fixedPrototype';
+import { createExtendedClassCopyPrototypesAndBindOwned } from './fixedPrototype';
 
-class CustomNumber extends Number {}
-
-defineAndBindFunctionsFrom(CustomNumber, Number);
-TODO = getClonedPrototype(CustomNumber, Number.prototype);
+const CustomNumber = createExtendedClassCopyPrototypesAndBindOwned(Number);
 
 export default CustomNumber;

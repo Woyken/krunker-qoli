@@ -1,7 +1,5 @@
-import { getClonedPrototype } from './fixedPrototype';
+import { createExtendedClassCopyPrototypesAndBindOwned } from './fixedPrototype';
 
-class CustomMap extends Map {}
-
-TODO = getClonedPrototype(CustomMap, Map.prototype);
+const CustomMap = createExtendedClassCopyPrototypesAndBindOwned(Map);
 
 export default CustomMap;
