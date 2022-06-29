@@ -5,9 +5,9 @@ export default function useIsGameLocation() {
     const [isGameLocation, setIsGameLocation] = createSignal(false);
     const locationHref = useLocationHref();
     createEffect(() => {
-        if (new URL(locationHref()).searchParams.get('game')) {
-            setIsGameLocation(true);
-        }
+        const url = new URL(locationHref());
+        if (url.pathname === '/') return setIsGameLocation(true);
+        return setIsGameLocation(false);
     });
     return isGameLocation;
 }
