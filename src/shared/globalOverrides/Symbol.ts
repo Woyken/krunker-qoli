@@ -1,4 +1,4 @@
-import clonePrototype, { defineAndBindFunctionsFrom } from './fixedPrototype';
+import { getClonedPrototype, defineAndBindFunctionsFrom } from './fixedPrototype';
 
 const LocalSymbol = Symbol;
 
@@ -7,6 +7,6 @@ function CustomSymbol(description?: string | number) {
 }
 
 defineAndBindFunctionsFrom(CustomSymbol, Symbol);
-clonePrototype(CustomSymbol, Symbol.prototype);
+TODO = getClonedPrototype(CustomSymbol, Symbol.prototype);
 
 export default CustomSymbol;

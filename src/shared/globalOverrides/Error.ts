@@ -1,7 +1,7 @@
-import clonePrototype from './fixedPrototype';
+import { getClonedPrototype } from './fixedPrototype';
 
 class CustomError extends Error {}
 
-clonePrototype(CustomError, Error.prototype);
+TODO = getClonedPrototype(CustomError, Error.prototype);
 
 export default CustomError;

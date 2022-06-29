@@ -1,7 +1,7 @@
-import clonePrototype from './fixedPrototype';
+import { getClonedPrototype } from './fixedPrototype';
 
 class CustomMutationObserver extends MutationObserver {}
 
-clonePrototype(CustomMutationObserver, MutationObserver.prototype);
+TODO = getClonedPrototype(CustomMutationObserver, MutationObserver.prototype);
 
 export default CustomMutationObserver;

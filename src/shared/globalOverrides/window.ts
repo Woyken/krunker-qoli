@@ -17,4 +17,14 @@ clonePrototypesFunctionsAndBindToInstanceTree(customWindow.location as any, wind
 defineAndBindFunctionsFrom(customWindow.location, window.location);
 defineAndBindFunctionsFrom(customWindow, window);
 
+function clonePrototypeTree(existingPrototype: any) {
+    let currentPrototype = existingPrototype;
+    while (currentPrototype != null) {
+        clonePrototypeFunctionsAndBindToInstance(copyObj, currentPrototype, origThis);
+        currentPrototype = Object.getPrototypeOf(currentPrototype);
+    }
+}
+
+getClonedPrototype(customWindow, window);
+
 export default customWindow;

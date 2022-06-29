@@ -1,7 +1,7 @@
-import clonePrototype from './fixedPrototype';
+import { getClonedPrototype } from './fixedPrototype';
 
 class CustomMessageChannel extends MessageChannel {}
 
-clonePrototype(CustomMessageChannel, MessageChannel.prototype);
+TODO = getClonedPrototype(CustomMessageChannel, MessageChannel.prototype);
 
 export default CustomMessageChannel;

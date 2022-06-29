@@ -1,7 +1,7 @@
-import clonePrototype from './fixedPrototype';
+import { getClonedPrototype } from './fixedPrototype';
 
 class CustomKeyboardEvent extends KeyboardEvent {}
 
-clonePrototype(CustomKeyboardEvent, KeyboardEvent.prototype);
+TODO = getClonedPrototype(CustomKeyboardEvent, KeyboardEvent.prototype);
 
 export default CustomKeyboardEvent;

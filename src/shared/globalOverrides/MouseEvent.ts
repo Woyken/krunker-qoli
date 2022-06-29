@@ -1,7 +1,7 @@
-import clonePrototype from './fixedPrototype';
+import { getClonedPrototype } from './fixedPrototype';
 
 class CustomMouseEvent extends MouseEvent {}
 
-clonePrototype(CustomMouseEvent, MouseEvent.prototype);
+TODO = getClonedPrototype(CustomMouseEvent, MouseEvent.prototype);
 
 export default CustomMouseEvent;
