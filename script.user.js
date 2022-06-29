@@ -3,7 +3,7 @@
 // @name         Krunker Quoli
 // @namespace    https://github.com/Woyken/krunker-qoli
 // @version      0.5.7
-// @description  
+// @description  Krunker quality of life improvements
 // @author       Woyken
 // @match        https://krunker.io/*
 // @grant        none
