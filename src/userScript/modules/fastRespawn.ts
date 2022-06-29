@@ -9,15 +9,13 @@ import { enabledFastRespawn } from '../state/userScriptSettingsState';
 import documentEvents from '../utils/unsafe.documentEvents';
 import createScopedLogger from '../utils/logger';
 
-const LocalMouseEvent = MouseEvent;
-
 const logger = createScopedLogger('[fastRespawn]');
 
 function tryToActivateGame() {
     logger.log('trying to activate game');
     const node = Array.from(document.getElementsByTagName('canvas')).pop();
-    node?.dispatchEvent(new LocalMouseEvent('mousedown', { bubbles: true, cancelable: true }));
-    node?.dispatchEvent(new LocalMouseEvent('mouseup', { bubbles: true, cancelable: true }));
+    node?.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true }));
+    node?.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, cancelable: true }));
 }
 
 export default function useFastRespawn() {

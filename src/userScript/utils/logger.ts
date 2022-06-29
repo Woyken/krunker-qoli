@@ -1,6 +1,4 @@
-// eslint-disable-next-line no-console
-const localConsoleLog = console.log.bind(console);
-
+/* eslint-disable no-console */
 const logsEnabled = true;
 
 class ScopedLogger {
@@ -15,7 +13,7 @@ class ScopedLogger {
     }
 
     log(...args: unknown[]) {
-        if (logsEnabled) localConsoleLog(...this.argsScope, ...args);
+        if (logsEnabled) console.log(...this.argsScope, ...args);
     }
 }
 

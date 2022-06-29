@@ -5,8 +5,6 @@ import { enabledFastRespawn } from '../state/userScriptSettingsState';
 import createScopedLogger from '../utils/logger';
 import { createMutationObserverForStylesIfDisplayBlock, styleObserveConfig } from './utils/observerForStyles';
 
-const LocalKeyboardEvent = KeyboardEvent;
-
 const logger = createScopedLogger('[autoReload]');
 
 export default function useAutoReload() {
@@ -46,7 +44,7 @@ export default function useAutoReload() {
             bubbles: true,
             cancelable: true,
         };
-        node?.dispatchEvent(new LocalKeyboardEvent('keydown', eventData));
+        node?.dispatchEvent(new KeyboardEvent('keydown', eventData));
         setWasReloadPressed(true);
     });
 
@@ -67,6 +65,6 @@ export default function useAutoReload() {
             bubbles: true,
             cancelable: true,
         };
-        node?.dispatchEvent(new LocalKeyboardEvent('keyup', eventData));
+        node?.dispatchEvent(new KeyboardEvent('keyup', eventData));
     });
 }
