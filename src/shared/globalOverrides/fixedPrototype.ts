@@ -9,14 +9,12 @@ export function clonePrototypeFunctionsAndBindToInstance<P, T extends { prototyp
     for (let i = 0; i < props.length; i += 1) {
         const value = Object.getOwnPropertyDescriptor(proto, props[i]);
         if (value) {
-            if (typeof value.value === 'function') {
-                Object.defineProperty(copyObj, props[i], {
-                    ...value,
-                    value: value.value.bind(origThis),
-                });
-            } else {
-                // ignore other fields, better leave them undefined
-            }
+            const descriptor: PropertyDescriptor = { ...value };
+            if (value.get) descriptor.get = value.get.bind(origThis);
+            if (value.set) descriptor.set = value.set.bind(origThis);
+            if (typeof value.value === 'function') descriptor.value = value.value.bind(origThis);
+            if (descriptor.get || descriptor.set || descriptor.value)
+                Object.defineProperty(copyObj, props[i], descriptor);
         }
     }
 }
