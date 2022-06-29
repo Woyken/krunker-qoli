@@ -27,6 +27,8 @@
     "eslint-plugin-prettier": "4.1.0",
     "eslint-plugin-simple-import-sort": "7.0.0",
     "eslint-plugin-solid": "0.7.0",
+    "estree-walker": "2.0.1",
+    "magic-string": "0.26.2",
     "prettier": "2.7.1",
     "typescript": "4.7.4",
     "url": "0.11.0",
