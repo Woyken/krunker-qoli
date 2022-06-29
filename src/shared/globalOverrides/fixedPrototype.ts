@@ -55,11 +55,7 @@ export function defineAndBindFunctionsFrom<T>(copyObj: T, obj: T) {
     for (let i = 0; i < props.length; i += 1) {
         const value = Object.getOwnPropertyDescriptor(obj, props[i]);
         if (value) {
-            const descriptor: PropertyDescriptor = {
-                configurable: value.configurable,
-                enumerable: value.enumerable,
-                writable: value.writable,
-            };
+            const descriptor: PropertyDescriptor = { ...value };
             if (value.get) descriptor.get = value.get.bind(obj);
             if (value.set) descriptor.set = value.set.bind(obj);
             if (typeof value.value === 'function') descriptor.value = value.value.bind(obj);
