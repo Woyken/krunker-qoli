@@ -76,6 +76,7 @@ export default defineConfig({
     base: '/krunker-qoli/',
     plugins: vitePlugins,
     build: {
+        polyfillModulePreload: false,
         emptyOutDir: isScriptBuild,
         target: 'esnext',
         polyfillDynamicImport: false,
