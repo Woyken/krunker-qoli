@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name         Krunker Quoli
 // @namespace    https://github.com/Woyken/krunker-qoli
-// @version      0.5.8
+// @version      0.5.9
 // @description  Krunker quality of life improvements
 // @author       Woyken
 // @match        https://krunker.io/*
