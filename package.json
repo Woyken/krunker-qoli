@@ -1,7 +1,7 @@
 {
   "name": "krunker-qoli",
   "displayName": "Krunker Quoli",
-  "version": "0.5.8",
+  "version": "0.5.9",
   "description": "Krunker quality of life improvements",
   "author": "Woyken",
   "scripts": {
