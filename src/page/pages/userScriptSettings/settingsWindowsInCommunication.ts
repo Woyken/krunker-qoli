@@ -91,7 +91,8 @@ export function useExposeSettingsCommunication(exposeToWindow: Window) {
             enabledFastRespawn(),
             enabledAdPopupDismisser(),
             enabledAutoReload(),
-            enabledWindowManager()
+            enabledWindowManager(),
+            enabledAutoClickJunkPickup()
         );
         currentCallback()?.({
             enabledFastRespawn: enabledFastRespawn(),
