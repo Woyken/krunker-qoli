@@ -1,5 +1,6 @@
 import { createEffect, createSignal, onCleanup } from 'solid-js';
 import { documentReadyStateIsComplete } from '../state/documentState';
+import useDocumentIsPointerLocked from '../state/useDocumentIsPointerLocked';
 import useIsUserInGame from '../state/useIsUserInGame';
 import { enabledFastRespawn } from '../state/userScriptSettingsState';
 import createScopedLogger from '../utils/logger';
@@ -48,9 +49,11 @@ export default function useAutoReload() {
         setWasReloadPressed(true);
     });
 
+    const isPointerLocked = useDocumentIsPointerLocked();
     createEffect(() => {
         if (!wasReloadPressed()) return;
         if (!isUserInGame()) return;
+        if (!isPointerLocked()) return;
         if (isReloadMessageVisible()) return;
 
         logger.log('releasing reload button');
