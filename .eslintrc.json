@@ -4,7 +4,14 @@
         "es2021": true
     },
     "plugins": ["@typescript-eslint", "solid", "prettier", "simple-import-sort", "import"],
-    "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended", "airbnb-base", "plugin:import/typescript", "plugin:solid/typescript", "prettier"],
+    "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
+        "airbnb-base",
+        "plugin:import/typescript",
+        "plugin:solid/typescript",
+        "prettier"
+    ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "ecmaFeatures": {
@@ -12,6 +19,16 @@
         },
         "ecmaVersion": "latest",
         "sourceType": "module"
+    },
+    "settings": {
+        "import/parsers": {
+            "@typescript-eslint/parser": [".ts", ".tsx"]
+        },
+        "import/resolver": {
+            "typescript": {
+                "alwaysTryTypes": true
+            }
+        }
     },
     "rules": {
         "import/extensions": [
