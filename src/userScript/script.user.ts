@@ -1,3 +1,4 @@
+import './utils/unsafe.panic';
 import { createEffect } from 'solid-js';
 import useAdPopupDismisser from './modules/adPopupDismisser';
 import useAutoReload from './modules/autoReload';

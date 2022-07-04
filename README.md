@@ -1,4 +1,4 @@
-# krunker-qoli
+# Krunker Qoli
 
 Some Krunker.io game quality of life improvements
 

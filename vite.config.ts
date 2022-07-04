@@ -73,7 +73,7 @@ if (isScriptBuild)
     );
 
 export default defineConfig({
-    base: '/krunker-qoli/',
+    base: './',
     plugins: vitePlugins,
     build: {
         polyfillModulePreload: false,
