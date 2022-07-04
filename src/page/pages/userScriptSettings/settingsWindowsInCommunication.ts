@@ -1,21 +1,23 @@
+import {
+    enabledFastRespawn,
+    enabledAutoReload,
+    enabledWindowManager,
+    enabledAdPopupDismisser,
+    enabledAutoClickJunkPickup,
+} from '@/shared/state';
 import { expose } from 'comlink';
 import { createEffect, createSignal, onCleanup } from 'solid-js';
 import windowEndpointWithUnsubscribe from '../../../shared/utils/windowEndpointWithUnsubscribe';
 import createScopedLogger from '../../../userScript/utils/logger';
-import {
-    enabledFastRespawn,
-    enabledAdPopupRemoval,
-    enabledAutoReload,
-    enabledWindowManager,
-} from './state/userScriptSettings';
 
 const logger = createScopedLogger('[Window settings communicator]');
 
 export interface UserScriptSettings {
     enabledFastRespawn: boolean;
-    enabledAdPopupRemoval: boolean;
+    enabledAdPopupDismisser: boolean;
     enabledAutoReload: boolean;
     enabledWindowManager: boolean;
+    enabledAutoClickJunkPickup: boolean;
 }
 
 export interface ExposedSettings {
@@ -87,15 +89,16 @@ export function useExposeSettingsCommunication(exposeToWindow: Window) {
             'settings callback',
             currentCallback(),
             enabledFastRespawn(),
-            enabledAdPopupRemoval(),
+            enabledAdPopupDismisser(),
             enabledAutoReload(),
             enabledWindowManager()
         );
         currentCallback()?.({
             enabledFastRespawn: enabledFastRespawn(),
-            enabledAdPopupRemoval: enabledAdPopupRemoval(),
+            enabledAdPopupDismisser: enabledAdPopupDismisser(),
             enabledAutoReload: enabledAutoReload(),
             enabledWindowManager: enabledWindowManager(),
+            enabledAutoClickJunkPickup: enabledAutoClickJunkPickup(),
         });
     });
 

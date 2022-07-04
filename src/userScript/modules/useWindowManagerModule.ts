@@ -1,6 +1,6 @@
+import { enabledWindowManager } from '@/shared/state';
 import { createEffect } from 'solid-js';
 import { qoliBaseUrl } from '../settingsWindow/settingsWindowsOutCommunication';
-import { enabledWindowManager } from '../state/userScriptSettingsState';
 
 export default function useWindowManagerModule() {
     createEffect(() => {

@@ -1,8 +1,8 @@
 import { createEffect, createSignal, onCleanup } from 'solid-js';
+import { enabledFastRespawn } from '@/shared/state';
 import { documentReadyStateIsComplete } from '../state/documentState';
 import useDocumentIsPointerLocked from '../state/useDocumentIsPointerLocked';
 import useIsUserInGame from '../state/useIsUserInGame';
-import { enabledFastRespawn } from '../state/userScriptSettingsState';
 import createScopedLogger from '../utils/logger';
 import { createMutationObserverForStylesIfDisplayBlock, styleObserveConfig } from './utils/observerForStyles';
 

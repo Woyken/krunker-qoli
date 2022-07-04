@@ -6,6 +6,7 @@ import useFastRespawn from './modules/fastRespawn';
 import useWindowManagerModule from './modules/useWindowManagerModule';
 import useSettingsRemoteConnection from './settingsWindow/settingsWindowsOutCommunication';
 import useIsGameLocation from './state/useIsGameLocation';
+import useAutoPickupJunk from './modules/autoPickupJunk';
 
 function initModules() {
     const isGameLocation = useIsGameLocation();
@@ -16,7 +17,7 @@ function initModules() {
         useAdPopupDismisser();
         useFastRespawn();
         useAutoReload();
-        // useAutoPickupJunk();
+        useAutoPickupJunk();
         useWindowManagerModule();
         useSettingsRemoteConnection();
     });

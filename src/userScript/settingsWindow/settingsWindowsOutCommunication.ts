@@ -1,16 +1,17 @@
 import { proxy, wrap } from 'comlink';
 import { createEffect, createSignal, onCleanup } from 'solid-js';
+import {
+    setEnabledFastRespawn,
+    setEnabledAdPopupDismisser,
+    setEnabledAutoReload,
+    setEnabledWindowManager,
+    setEnabledAutoClickJunkPickup,
+} from '@/shared/state';
 import { apiVersion } from '../../shared/globals';
 import type {
     UserScriptSettings,
     ExposedSettings,
 } from '../../page/pages/userScriptSettings/settingsWindowsInCommunication';
-import {
-    setEnabledAdPopupDismisser,
-    setEnabledAutoReload,
-    setEnabledFastRespawn,
-    setEnabledWindowManager,
-} from '../state/userScriptSettingsState';
 import createScopedLogger from '../utils/logger';
 import windowEndpointWithUnsubscribe from '../../shared/utils/windowEndpointWithUnsubscribe';
 import { useOnWindowClosedRemove } from '../../page/pages/windowManager/useRemoveClosedWindows';
@@ -38,9 +39,10 @@ window.addEventListener('message', (e) => {
 function settingsUpdatedCallback(settings: UserScriptSettings) {
     logger.log('settingsUpdatedCallback', settings);
     setEnabledFastRespawn(settings.enabledFastRespawn);
-    setEnabledAdPopupDismisser(settings.enabledAdPopupRemoval);
+    setEnabledAdPopupDismisser(settings.enabledAdPopupDismisser);
     setEnabledAutoReload(settings.enabledAutoReload);
     setEnabledWindowManager(settings.enabledWindowManager);
+    setEnabledAutoClickJunkPickup(settings.enabledAutoClickJunkPickup);
 }
 
 function promiseWrapperWithThrowTimeout<T>(inputPromise: Promise<T>, timeout: number): Promise<T> {

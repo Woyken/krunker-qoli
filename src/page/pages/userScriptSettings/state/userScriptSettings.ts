@@ -1,36 +1,36 @@
-import { createEffect, createSignal } from 'solid-js';
+import { createEffect, onCleanup } from 'solid-js';
+import {
+    enabledAdPopupDismisser,
+    enabledAutoClickJunkPickup,
+    enabledAutoReload,
+    enabledFastRespawn,
+    enabledWindowManager,
+    setEnabledAdPopupDismisser,
+    setEnabledAutoClickJunkPickup,
+    setEnabledAutoReload,
+    setEnabledFastRespawn,
+    setEnabledWindowManager,
+} from '@/shared/state';
 
-export const [enabledAutoReload, setEnabledAutoReload] = createSignal(
-    (localStorage.getItem('enabledAutoReload') ?? 'true') === 'true'
-);
-export const [enabledFastRespawn, setEnabledFastRespawn] = createSignal(
-    (localStorage.getItem('enabledFastRespawn') ?? 'true') === 'true'
-);
-export const [enabledAdPopupRemoval, setEnabledAdPopupRemoval] = createSignal(
-    (localStorage.getItem('enabledAdPopupRemoval') ?? 'true') === 'true'
-);
-export const [enabledWindowManager, setEnabledWindowManager] = createSignal(
-    (localStorage.getItem('enabledWindowManager') ?? 'false') === 'true'
-);
+export default function useSavedSettings() {
+    function handleOnStorageEvent() {
+        setEnabledAutoReload((localStorage.getItem('enabledAutoReload') ?? 'true') === 'true');
+        setEnabledFastRespawn((localStorage.getItem('enabledFastRespawn') ?? 'true') === 'true');
+        setEnabledAdPopupDismisser((localStorage.getItem('enabledAdPopupRemoval') ?? 'true') === 'true');
+        setEnabledAutoClickJunkPickup((localStorage.getItem('enabledAutoClickJunkPickup') ?? 'true') === 'true');
+        setEnabledWindowManager((localStorage.getItem('enabledWindowManager') ?? 'false') === 'true');
+    }
+    // set initial state
+    createEffect(handleOnStorageEvent);
 
-// Persist state
-createEffect(() => {
-    localStorage.setItem('enabledAutoReload', `${enabledAutoReload()}`);
-});
-createEffect(() => {
-    localStorage.setItem('enabledFastRespawn', `${enabledFastRespawn()}`);
-});
-createEffect(() => {
-    localStorage.setItem('enabledAdPopupRemoval', `${enabledAdPopupRemoval()}`);
-});
-createEffect(() => {
-    localStorage.setItem('enabledWindowManager', `${enabledWindowManager()}`);
-});
+    // Persist state
+    createEffect(() => localStorage.setItem('enabledAutoReload', `${enabledAutoReload()}`));
+    createEffect(() => localStorage.setItem('enabledFastRespawn', `${enabledFastRespawn()}`));
+    createEffect(() => localStorage.setItem('enabledAdPopupRemoval', `${enabledAdPopupDismisser()}`));
+    createEffect(() => localStorage.setItem('enabledAutoClickJunkPickup', `${enabledAutoClickJunkPickup()}`));
+    createEffect(() => localStorage.setItem('enabledWindowManager', `${enabledWindowManager()}`));
 
-// this will be triggered if anything changes in localStorage from another tab
-window.addEventListener('storage', () => {
-    setEnabledAutoReload((localStorage.getItem('enabledAutoReload') ?? 'true') === 'true');
-    setEnabledFastRespawn((localStorage.getItem('enabledFastRespawn') ?? 'true') === 'true');
-    setEnabledAdPopupRemoval((localStorage.getItem('enabledAdPopupRemoval') ?? 'true') === 'true');
-    setEnabledWindowManager((localStorage.getItem('enabledWindowManager') ?? 'true') === 'true');
-});
+    // this will be triggered if anything changes in localStorage from another tab
+    window.addEventListener('storage', handleOnStorageEvent);
+    onCleanup(() => window.removeEventListener('storage', handleOnStorageEvent));
+}

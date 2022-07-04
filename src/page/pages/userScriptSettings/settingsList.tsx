@@ -1,18 +1,23 @@
-import Box from '@suid/material/Box';
-import Checkbox from '@suid/material/Checkbox';
-import FormControlLabel from '@suid/material/FormControlLabel';
 import {
-    enabledAdPopupRemoval,
+    enabledAdPopupDismisser,
+    enabledAutoClickJunkPickup,
     enabledAutoReload,
     enabledFastRespawn,
     enabledWindowManager,
-    setEnabledAdPopupRemoval,
+    setEnabledAdPopupDismisser,
+    setEnabledAutoClickJunkPickup,
     setEnabledAutoReload,
     setEnabledFastRespawn,
     setEnabledWindowManager,
-} from './state/userScriptSettings';
+} from '@/shared/state';
+import Box from '@suid/material/Box';
+import Checkbox from '@suid/material/Checkbox';
+import FormControlLabel from '@suid/material/FormControlLabel';
+import useSavedSettings from './state/userScriptSettings';
 
 export default function SettingsList() {
+    useSavedSettings();
+
     return (
         <>
             <Box sx={{ width: '100%' }}>
@@ -28,6 +33,7 @@ export default function SettingsList() {
                     }
                     label="Auto reload"
                 />
+                <br />
                 <FormControlLabel
                     value="Auto respawn"
                     control={
@@ -45,14 +51,15 @@ export default function SettingsList() {
                     value="Remove popup ads"
                     control={
                         <Checkbox
-                            checked={enabledAdPopupRemoval()}
+                            checked={enabledAdPopupDismisser()}
                             onChange={(event, checked) => {
-                                setEnabledAdPopupRemoval(checked);
+                                setEnabledAdPopupDismisser(checked);
                             }}
                         />
                     }
                     label="Remove popup ads"
                 />
+                <br />
                 <FormControlLabel
                     value="Open Krunker in new Window"
                     control={
@@ -64,6 +71,19 @@ export default function SettingsList() {
                         />
                     }
                     label="Open Krunker in new Window"
+                />
+                <br />
+                <FormControlLabel
+                    value="Auto collect junk (click when prompted)"
+                    control={
+                        <Checkbox
+                            checked={enabledAutoClickJunkPickup()}
+                            onChange={(event, checked) => {
+                                setEnabledAutoClickJunkPickup(checked);
+                            }}
+                        />
+                    }
+                    label="Auto collect junk (click when prompted)"
                 />
             </Box>
         </>

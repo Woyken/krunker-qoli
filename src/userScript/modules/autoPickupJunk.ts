@@ -1,4 +1,5 @@
 import { createEffect, createSignal, onCleanup } from 'solid-js';
+import { enabledAutoClickJunkPickup } from '@/shared/state';
 import { documentReadyStateIsComplete } from '../state/documentState';
 import useIsUserInGame from '../state/useIsUserInGame';
 import createScopedLogger from '../utils/logger';
@@ -16,6 +17,7 @@ export default function useAutoPickupJunk() {
     const interactMessageObserver = createMutationObserverForStylesIfDisplayBlock(setIsInteractMessageVisible);
     createEffect(() => {
         if (!documentReadyStateIsComplete()) return;
+        if (!enabledAutoClickJunkPickup()) return;
 
         logger.log('document readyState complete, adding observer');
 

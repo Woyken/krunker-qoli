@@ -1,6 +1,6 @@
 import { createEffect, createSignal, onCleanup } from 'solid-js';
+import { enabledAdPopupDismisser } from '@/shared/state';
 import { documentReadyStateIsComplete } from '../state/documentState';
-import { enabledAdPopupDismisser } from '../state/userScriptSettingsState';
 import createScopedLogger from '../utils/logger';
 import { createMutationObserverForStylesIfDisplayBlock, styleObserveConfig } from './utils/observerForStyles';
 

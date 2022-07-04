@@ -2,10 +2,10 @@
 /* eslint-disable import/extensions */
 import { createEffect, createSignal, onCleanup } from 'solid-js';
 import useDocumentIsFocused from '@/shared/hooks/useDocumentIsFocused';
+import { enabledFastRespawn } from '@/shared/state';
 import useDocumentIsPointerLocked from '../state/useDocumentIsPointerLocked';
 import useIsUserInGame from '../state/useIsUserInGame';
 import useIsUserInKillCam from '../state/useIsUserInKillCam';
-import { enabledFastRespawn } from '../state/userScriptSettingsState';
 import documentEvents from '../utils/unsafe.documentEvents';
 import createScopedLogger from '../utils/logger';
 
