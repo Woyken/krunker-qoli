@@ -27,7 +27,7 @@
     "eslint-plugin-import": "2.26.0",
     "eslint-plugin-prettier": "4.2.1",
     "eslint-plugin-simple-import-sort": "7.0.0",
-    "eslint-plugin-solid": "0.7.0",
+    "eslint-plugin-solid": "0.7.1",
     "estree-walker": "2.0.2",
     "magic-string": "0.26.2",
     "prettier": "2.7.1",
