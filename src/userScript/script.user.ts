@@ -1,5 +1,5 @@
 import './utils/unsafe.panic';
-import { createEffect } from 'solid-js';
+import { createEffect, createRoot } from 'solid-js';
 import useAdPopupDismisser from './modules/adPopupDismisser';
 import useAutoReload from './modules/autoReload';
 import useFastRespawn from './modules/fastRespawn';
@@ -9,17 +9,20 @@ import useIsGameLocation from './state/useIsGameLocation';
 import useAutoPickupJunk from './modules/autoPickupJunk';
 
 function initModules() {
-    const isGameLocation = useIsGameLocation();
-    createEffect(() => {
-        // Let's not mess with social links
-        if (!isGameLocation()) return;
+    // Init solid-js reactive root manually, since we're not actually rendering anything
+    createRoot(() => {
+        const isGameLocation = useIsGameLocation();
+        createEffect(() => {
+            // Let's not mess with social links
+            if (!isGameLocation()) return;
 
-        useAdPopupDismisser();
-        useFastRespawn();
-        useAutoReload();
-        useAutoPickupJunk();
-        useWindowManagerModule();
-        useSettingsRemoteConnection();
+            useAdPopupDismisser();
+            useFastRespawn();
+            useAutoReload();
+            useAutoPickupJunk();
+            useWindowManagerModule();
+            useSettingsRemoteConnection();
+        });
     });
 }
 
