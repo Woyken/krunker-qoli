@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name         Krunker Quoli
 // @namespace    https://github.com/Woyken/krunker-qoli
-// @version      0.5.10
+// @version      0.5.11
 // @description  Krunker quality of life improvements
 // @author       Woyken
 // @match        https://krunker.io/*
@@ -12,4 +12,4 @@
 // ==/UserScript==
 /**/
 
-const a=function(){const r=document.createElement("link").relList;return r&&r.supports&&r.supports("modulepreload")?"modulepreload":"preload"}(),s={},d="./",m=function(r,o){return!o||o.length===0?r():Promise.all(o.map(e=>{if(e=`${d}${e}`,e in s)return;s[e]=!0;const n=e.endsWith(".css"),l=n?'[rel="stylesheet"]':"";if(document.querySelector(`link[href="${e}"]${l}`))return;const t=document.createElement("link");if(t.rel=n?"stylesheet":a,n||(t.as="script",t.crossOrigin=""),t.href=e,document.head.appendChild(t),n)return new Promise((c,u)=>{t.addEventListener("load",c),t.addEventListener("error",()=>u(new Error(`Unable to preload CSS for ${e}`)))})})).then(()=>r())};m(()=>import("./script.user.js"),[]);
+const m=function(){const e=document.createElement("link").relList;return e&&e.supports&&e.supports("modulepreload")?"modulepreload":"preload"}(),d=function(o,e){return new URL(o,e).href},i={},f=function(e,s,l){return!s||s.length===0?e():Promise.all(s.map(t=>{if(t=d(t,l),t in i)return;i[t]=!0;const n=t.endsWith(".css"),c=n?'[rel="stylesheet"]':"";if(document.querySelector(`link[href="${t}"]${c}`))return;const r=document.createElement("link");if(r.rel=n?"stylesheet":m,n||(r.as="script",r.crossOrigin=""),r.href=t,document.head.appendChild(r),n)return new Promise((u,a)=>{r.addEventListener("load",u),r.addEventListener("error",()=>a(new Error(`Unable to preload CSS for ${t}`)))})})).then(()=>e())};f(()=>import("./script.user.js"),[],import.meta.url);
